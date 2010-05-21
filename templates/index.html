@@ -78,10 +78,6 @@
 		timeString = timeString.replace(/[a-zA-Z&;]/g,'');
 		
 		var splitTimes = timeString.split('-');
-			if(splitTimes == '') {
-				broadcastMessage('Invalid time');
-			}
-			
 			var startTime = splitTimes[0];
 			var endTime = splitTimes[1];
 		
@@ -136,6 +132,7 @@
 	}
 	
 	jQuery(document).ready(function() {
+		//initialize calendar
 		jQuery('#calendar').weekCalendar({
 			timeslotsPerHour: 2,
 			useShortDayNames: true,
@@ -161,13 +158,17 @@
 
 				timeString = jQuery(this).find('td').eq(5).html();
 				
-				//check if click was on an actual course
 				if(timeString == null) {
-					broadcastMessage("You didn't click on a course!");
+					broadcastMessage("You didn't click on a course.");
+					return false;
 				};
-
+				
+				if(timeString.indexOf('TBA') != -1) {
+					broadcastMessage("Course time is 'TBA'");
+					return false;
+				}
 				courseString = jQuery(this).prevAll().find('.CourseTitle:last').html();
-
+				
 				var calEvents = createEvents(
 					parseCourseString(courseString),
 					getCourseDays(timeString), 

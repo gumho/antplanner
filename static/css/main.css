@@ -3,12 +3,8 @@
 	padding: 0;
 }
 
-body {
+#wrapper {
 	overflow: hidden;
-}
-
-#header {
-	
 }
 
 #calendar {
@@ -23,10 +19,14 @@ iframe#school {
 	float: left;
 }
 
-.course-hover {
-	font-size: 5px;
-}
+	.course-list {
+		font-family: arial;
+	}
 
+	.course-list tr {
+		cursor: crosshair;
+		font-size: 12px;
+	}
 /* calendar */
 /*.wc-header td {
 	background: url(/static/img/shader.png) repeat-x;
