@@ -18,5 +18,14 @@ yours...fork!
 This is considered an alpha release. Many features have not yet been 
 implemented. Beware!
 
+=== INSTRUCTIONS ===
+Ant Planner uses Templetor templating system. When serving on GAE, templates need to be 
+compiled before serving the pages since the Python parser module is blocked by GAE. 
+After changes to templates are made, you need to issue the following before running to 
+see changes:
+
+	$python web/template.py --compile templates/
+
+
 === DISCLAIMER ===
 Ant Planner is not officially recognized by UC Irvine. Use at your own risk!
