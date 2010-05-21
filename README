@@ -25,6 +25,10 @@ After changes to templates are made, you need to issue the following before runn
 see changes:
 
 	$python web/template.py --compile templates/
+	
+Then, to use the GAE GUI to run the app or issue:
+
+	$dev_appserver.py .
 
 
 === DISCLAIMER ===
