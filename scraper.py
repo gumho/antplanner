@@ -1,4 +1,4 @@
-from BeautifulSoup import BeautifulSoup
+from lib.BeautifulSoup import BeautifulSoup
 
 #consider caching if gets too expensive
 

@@ -1,4 +1,4 @@
-application: ant planner
+application: ant-planner
 version: 1
 api_version: 1
 runtime: python
@@ -7,4 +7,4 @@ handlers:
 - url: /static
   static_dir: static
 - url: .*
-  script: zot.py
+  script: ant-planner.py
