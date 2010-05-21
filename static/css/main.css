@@ -31,10 +31,6 @@ iframe#school {
 	font-size: 12px;
 }
 
-.course-list{
-   color:black;
-}
-
 .course-list td {
 	padding: 2px;
 }
@@ -44,7 +40,6 @@ iframe#school {
 
 
 .course-list tr.college-title td{
-   border-top: solid white 0.8em;
    border-bottom: solid white 3px;
    padding: 0.45em;
    background-color: black;

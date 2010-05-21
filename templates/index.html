@@ -48,25 +48,11 @@
 		
 		var courseDates = [];
 		
-		if(timeString.indexOf('M') != -1) {
-			courseDates.push(days['M']);
-		} 
-		
-		if(timeString.indexOf('Tu') != -1) {
-			courseDates.push(days['Tu']);
-		} 
-		
-		if(timeString.indexOf('W') != -1) {
-			courseDates.push(days['W']);
-		}
-		
-		if(timeString.indexOf('Th') != -1) {
-			courseDates.push(days['Th']);
-		}
-		
-		if(timeString.indexOf('F') != -1) {
-			courseDates.push(days['F']);
-		}
+		if(timeString.indexOf('M') != -1) {	courseDates.push(days['M']); } 
+		if(timeString.indexOf('Tu') != -1) { courseDates.push(days['Tu']); } 
+		if(timeString.indexOf('W') != -1) {	courseDates.push(days['W']); }
+		if(timeString.indexOf('Th') != -1) { courseDates.push(days['Th']); }
+		if(timeString.indexOf('F') != -1) {	courseDates.push(days['F']); }
 		
 		return courseDates;
 	}
@@ -185,7 +171,7 @@
 	</script>
 
 </head>
-<body>
+<body style="overflow: hidden">
 	<div id="wrapper">
 		<div id="header">
 			Ant Planner<sub>Alpha</sub>

@@ -195,7 +195,7 @@ def index():
     extend_([u'        </script>\n'])
     extend_([u'\n'])
     extend_([u'</head>\n'])
-    extend_([u'<body>\n'])
+    extend_([u'<body style="overflow: hidden">\n'])
     extend_([u'        <div id="wrapper">\n'])
     extend_([u'                <div id="header">\n'])
     extend_([u'                        Ant Planner<sub>Alpha</sub>\n'])
