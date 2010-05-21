@@ -153,6 +153,8 @@ def index():
         yield '', join_('                        daysToShow:5,\n')
         yield '', join_('                        businessHours: {start: 8, end: 21, limitDisplay: true},\n')
         yield '', join_('                        allowCalEventOverlap: true,\n')
+        yield '', join_('                        overlapEventsSeparate: true,\n')
+        yield '', join_('                        buttons: false,\n')
         yield '', join_('                        height: function(jQuerycalendar){\n')
         yield '', join_('                                return jQuery(window).height() - jQuery("h1").outerHeight();\n')
         yield '', join_('                        }\n')
@@ -211,6 +213,26 @@ def index():
     return __template__
 
 index = CompiledTemplate(index(), 'templates/index.html')
+
+
+def schedule():
+    loop = ForLoop()
+    _dummy  = CompiledTemplate(lambda: None, "dummy")
+    join_ = _dummy._join
+    escape_ = _dummy._escape
+
+    def __template__ (schedule):
+        yield '', join_('\n')
+        yield '', join_('<html>\n')
+        yield '', join_('<head>\n')
+        yield '', join_('</head>\n')
+        yield '', join_('<body>\n')
+        yield '', join_('        ', escape_(schedule, True), '\n')
+        yield '', join_('</body>\n')
+        yield '', join_('</html>\n')
+    return __template__
+
+schedule = CompiledTemplate(schedule(), 'templates/schedule.html')
 
 
 def search():

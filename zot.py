@@ -1,6 +1,6 @@
 import web
 import urllib
-import htmlcrush
+import scraper
 
 from google.appengine.api import urlfetch 
 
@@ -20,7 +20,7 @@ class search:
 	def GET(self):
 		try:
 			search_page = urlfetch.fetch("http://websoc.reg.uci.edu")
-			result = htmlcrush.strip_search(search_page.content)
+			result = scraper.strip_search(search_page.content)
 		except urlfetch.Error:
 			return "UCI webpage down at the moment"
 		return render.search(result)
@@ -57,11 +57,11 @@ class schedules:
 											payload=form_data,
 											method=urlfetch.POST,
 											headers={'Content-Type': 'application/x-www-form-urlencoded'})
-			result = htmlcrush.strip_schedule(schedule_page.content)
+			result = scraper.strip_schedule(schedule_page.content)
 		except urlfetch.Error:
-			return "UCI webpage down at the moment"
+			result = "UCI webpage down at the moment"
 		
-		return result
+		return render.schedule(result)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
