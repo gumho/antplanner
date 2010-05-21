@@ -1,0 +1,11 @@
+-GIT / HUB
+-hide the month names
+-back buttons
+-about, disclaimer
+-error message area
+-get rid of display text results and other junk
+-make own css to improve usablity
+-add split pane
+-colors for classes
+-remove event capability
+-print

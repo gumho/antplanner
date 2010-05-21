@@ -1,0 +1,10 @@
+application: zots
+version: 1
+api_version: 1
+runtime: python
+ 
+handlers:
+- url: /static
+  static_dir: static
+- url: .*
+  script: zot.py

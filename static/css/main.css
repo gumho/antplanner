@@ -1,0 +1,33 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	overflow: hidden;
+}
+
+#header {
+	
+}
+
+#calendar {
+	width: 50%;
+	float: left;
+}
+
+iframe#school {
+	border: none;
+	width: 50%;
+	height: 100%;
+	float: left;
+}
+
+.course-hover {
+	font-size: 5px;
+}
+
+/* calendar */
+/*.wc-header td {
+	background: url(/static/img/shader.png) repeat-x;
+}*/
