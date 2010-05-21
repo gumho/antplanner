@@ -10,7 +10,10 @@ the Web Soc search tools and a more streamlined interface. Most
 importantly, a weekly calendar for seeing course times laid out in 
 an organized manner is the main focus, an idea inspired by Zot Scheduler (http://www.ocf.berkeley.edu/~mlyang/scheduler/). 
 
-Ant Planner is written in Python using the web.py framework.
+Ant Planner is written in Python using the web.py framework and is meant to be
+run on Google App Engine as the Python App Engine APIs are used within. If you would
+like to extend Ant Planner and build so it can be run without GAE, the pleasure is
+yours...fork!
 
 This is considered an alpha release. Many features have not yet been 
 implemented. Beware!
