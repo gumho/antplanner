@@ -154,7 +154,7 @@ class Input(object):
     def render(self):
         attrs = self.attrs.copy()
         attrs['type'] = self.get_type()
-        if self.value:
+        if self.value is not None:
             attrs['value'] = self.value
         attrs['name'] = self.name
         return '<input %s/>' % attrs
@@ -164,7 +164,8 @@ class Input(object):
         else: return ""
         
     def addatts(self):
-        return str(self.attrs)
+        # add leading space for backward-compatibility
+        return " " + str(self.attrs)
 
 class AttributeList(dict):
     """List of atributes of input.
@@ -177,7 +178,7 @@ class AttributeList(dict):
         return AttributeList(self)
         
     def __str__(self):
-        return " ".join('%s="%s"' % (k, net.websafe(v)) for k, v in self.items())
+        return " ".join(['%s="%s"' % (k, net.websafe(v)) for k, v in self.items()])
         
     def __repr__(self):
         return '<attrs: %s>' % repr(str(self))
@@ -187,6 +188,8 @@ class Textbox(Input):
     
         >>> Textbox(name='foo', value='bar').render()
         '<input type="text" id="foo" value="bar" name="foo"/>'
+        >>> Textbox(name='foo', value=0).render()
+        '<input type="text" id="foo" value="0" name="foo"/>'
     """        
     def get_type(self):
         return 'text'
@@ -284,7 +287,7 @@ class Checkbox(Input):
         Input.__init__(self, name, *validators, **attrs)
         
     def get_default_id(self):
-        value = self.value or ""
+        value = utils.safestr(self.value or "")
         return self.name + '_' + value.replace(' ', '_')
 
     def render(self):
@@ -298,8 +301,7 @@ class Checkbox(Input):
         return '<input %s/>' % attrs
 
     def set_value(self, value):
-        if value:
-            self.checked = True
+        self.checked = bool(value)
 
     def get_value(self):
         return self.checked

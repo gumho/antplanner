@@ -171,12 +171,20 @@ class SQLQuery:
             >>> q.query(paramstyle='qmark')
             'SELECT * FROM test WHERE name=?'
         """
-        s = ''
+        s = []
         for x in self.items:
             if isinstance(x, SQLParam):
                 x = x.get_marker(paramstyle)
-            s += safestr(x)
-        return s
+                s.append(safestr(x))
+            else:
+                x = safestr(x)
+                # automatically escape % characters in the query
+                # For backward compatability, ignore escaping when the query looks already escaped
+                if paramstyle in ['format', 'pyformat']:
+                    if '%' in x and '%%' not in x:
+                        x = x.replace('%', '%%')
+                s.append(x)
+        return "".join(s)
     
     def values(self):
         """
@@ -966,11 +974,7 @@ class SqliteDB(DB):
     def query(self, *a, **kw):
         out = DB.query(self, *a, **kw)
         if isinstance(out, iterbetter):
-            # rowcount is not provided by sqlite
-            def _nonzero(): 
-                raise self.db_module.NotSupportedError("rowcount is not supported by sqlite")
             del out.__len__
-            out.__nonzero__ = _nonzero
         return out
 
 class FirebirdDB(DB):
