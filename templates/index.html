@@ -16,6 +16,8 @@
 	var START_MONTH = 4; //static calendar month (May)
 	var START_DAY = 3; //Monday the 3rd 
 	
+	var COURSE_BAG = []; //stores all courses on the calendar
+	
 	function broadcastMessage(message) {
 		alert(message);
 	}
@@ -25,11 +27,13 @@
 	}
 	
 	//parses course string into readable format ie. INF 41 Software Reqs
-	function parseCourseString(courseString) {
-		courseName = courseString.match(/<b>.*<\/b>/)[0].replace(/<.{1,2}>/g, '');
+	function constructCourseName(courseString, courseType) {
+		//removing the course name for now...it takes up too much space
+		//courseName = courseString.match(/<b>.*<\/b>/)[0].replace(/<.{1,2}>/g, '');
+		
 		courseNumber = courseString.match(/&nbsp;.*<font/)[0].replace('<font', '').replace(/&nbsp;/g, '').replace(/\s{2,}/g, ' ');
 		
-		return (courseNumber + courseName);
+		return (courseNumber + courseType);
 	}
 	
 	//returns an array containing the days a course occurs on
@@ -99,8 +103,8 @@
 		return time;
 	}
 	
+	//returns an array of calEvents
 	function createEvents(courseName, courseDates, courseTime) {
-		
 		var calEvents = [];
 
 		for(i in courseDates) {
@@ -112,6 +116,9 @@
 			};
 			
 			calEvents.push(e);
+			
+			//add calEvent to the global course storage
+			COURSE_BAG.push(e);
 		}
 		
 		return calEvents;
@@ -120,7 +127,7 @@
 	jQuery(document).ready(function() {
 		//initialize calendar
 		jQuery('#calendar').weekCalendar({
-			timeslotsPerHour: 4,
+			timeslotsPerHour: 2,
 			useShortDayNames: true,
 			noHeaderDate: true,
 			firstDayOfWeek: 1,
@@ -133,8 +140,29 @@
 			height: function(jQuerycalendar){
 				return jQuery(window).height() - jQuery('#header').height();
 			},
-			draggable : function(calEvent, event) {	return false; },
-			resizable : function(calEvent, event) {	return false; }
+			draggable : function(calEvent, eventElement) {	return false; },
+			resizable : function(calEvent, eventElement) {	return false; },
+			eventClick : function(calEvent, element) {
+				var eventTitle = calEvent.title;
+				var eventsToDelete = [];
+				
+				for(i in COURSE_BAG) {
+					var e = COURSE_BAG[i];
+					
+					if(e.title == eventTitle) {
+						jQuery('#calendar').weekCalendar('removeEvent', e.id);
+					}
+					
+					eventsToDelete.push(i);
+				}
+				
+				//remove courses from the course bag 
+				for(i in eventsToDelete) {
+					COURSE_BAG.splice(i, 1);
+				}
+				
+				alert(COURSE_BAG.length);
+			}
 		});
 		
 		//switch calendar view to the static date, rather than today's view
@@ -157,10 +185,11 @@
 					broadcastMessage("Course time is 'TBA'");
 					return false;
 				}
+				courseType = jQuery(this).find('td').eq(1).html();
 				courseString = jQuery(this).prevAll().find('.CourseTitle:last').html();
 				
 				var calEvents = createEvents(
-					parseCourseString(courseString),
+					constructCourseName(courseString, courseType),
 					getCourseDays(timeString), 
 					getCourseTime(timeString)
 				);
