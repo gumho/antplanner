@@ -12,9 +12,9 @@
 	
 	<script type="text/javascript" charset="utf-8">
 	
-	var YEAR = 2010; //static calendar year
-	var MONTH = 4; //static calendar month (May)
-	var DAY = 3; //Monday the 3rd 
+	var START_YEAR = 2010; //static calendar year
+	var START_MONTH = 4; //static calendar month (May)
+	var START_DAY = 3; //Monday the 3rd 
 	
 	function broadcastMessage(message) {
 		alert(message);
@@ -106,8 +106,8 @@
 		for(i in courseDates) {
 			var e = {	
 				"id": genID(),
-				"start": new Date(YEAR, MONTH, courseDates[i], courseTime.startHour, courseTime.startMin),
-				"end": new Date(YEAR, MONTH, courseDates[i], courseTime.endHour, courseTime.endMin),
+				"start": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.startHour, courseTime.startMin),
+				"end": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.endHour, courseTime.endMin),
 				"title": courseName
 			};
 			
@@ -131,18 +131,14 @@
 			buttons: false,
 			defaultEventLength: 0,
 			height: function(jQuerycalendar){
-				return jQuery(window).height();
+				return jQuery(window).height() - jQuery('#header').height();
 			},
-			draggable : function(calEvent, event) {
-				return false;
-			},
-			resizable : function(calEvent, event) {
-				return false;
-			}
+			draggable : function(calEvent, event) {	return false; },
+			resizable : function(calEvent, event) {	return false; }
 		});
 		
 		//switch calendar view to the static date, rather than today's view
-		jQuery('#calendar').weekCalendar('gotoWeek',  new Date(YEAR, MONTH, DAY));
+		jQuery('#calendar').weekCalendar('gotoWeek',  new Date(START_YEAR, START_MONTH, START_DAY));
 		
 		//click handler for adding courses
 		jQuery('#school').load(function() {
