@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Wtf</title>
+	<title>Ant Planner</title>
 
 	<link rel='stylesheet' type='text/css' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/start/jquery-ui.css' />
 	<link rel='stylesheet' type='text/css' href='/static/css/jquery.weekcalendar.css' />
@@ -120,26 +120,34 @@
 	jQuery(document).ready(function() {
 		//initialize calendar
 		jQuery('#calendar').weekCalendar({
-			timeslotsPerHour: 2,
+			timeslotsPerHour: 4,
 			useShortDayNames: true,
+			noHeaderDate: true,
 			firstDayOfWeek: 1,
 			daysToShow:5,
-			businessHours: {start: 8, end: 21, limitDisplay: true},
+			businessHours: {start: 8, end: 22, limitDisplay: true},
 			allowCalEventOverlap: true,
 			overlapEventsSeparate: true,
 			buttons: false,
+			defaultEventLength: 0,
 			height: function(jQuerycalendar){
-				return jQuery(window).height() - jQuery("h1").outerHeight();
+				return jQuery(window).height();
+			},
+			draggable : function(calEvent, event) {
+				return false;
+			},
+			resizable : function(calEvent, event) {
+				return false;
 			}
 		});
 		
+		//switch calendar view to the static date, rather than today's view
 		jQuery('#calendar').weekCalendar('gotoWeek',  new Date(YEAR, MONTH, DAY));
 		
-		//
+		//click handler for adding courses
 		jQuery('#school').load(function() {
 			var list = jQuery('.course-list', frames['school'].document);
 			
-			//add courses to calendar on click
 			jQuery('tr', list).click(function() {
 
 				timeString = jQuery(this).find('td').eq(5).html();
@@ -178,7 +186,6 @@
 		</div>
 
 		<div id="calendar">
-
 		</div>
 		
 		<iframe src ="/search" id="school" name="school">		
