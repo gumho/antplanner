@@ -17,13 +17,15 @@
 	var START_DAY = 3; //Monday the 3rd 
 	
 	var COURSE_BAG = []; //stores all courses on the calendar
+	var ID_COUNT = 0;
 	
 	function broadcastMessage(message) {
 		alert(message);
 	}
 	
 	function genID() {
-		return Math.floor(Math.random() * 101);
+		ID_COUNT += 1;
+		return ID_COUNT;
 	}
 	
 	//parses course string into readable format ie. INF 41 Software Reqs
@@ -127,7 +129,7 @@
 	jQuery(document).ready(function() {
 		//initialize calendar
 		jQuery('#calendar').weekCalendar({
-			timeslotsPerHour: 3,
+			timeslotsPerHour: 4,
 			useShortDayNames: true,
 			noHeaderDate: true,
 			firstDayOfWeek: 1,
@@ -142,22 +144,26 @@
 			},
 			draggable : function(calEvent, eventElement) {	return false; },
 			resizable : function(calEvent, eventElement) {	return false; },
+			eventNew : function(calEvent, element) {
+				//TODO: different colors for different courses
+			},
 			eventClick : function(calEvent, element) {
-				var eventTitle = calEvent.title;
-				var eventsToDelete = [];
-				
-				for(i in COURSE_BAG) {
-					var e = COURSE_BAG[i];
-					
-					if(e.title == eventTitle) {
-						jQuery('#calendar').weekCalendar('removeEvent', e.id);
-						eventsToDelete.push(i);
-					}
-				}
-				
-				for(i in eventsToDelete) {
-					COURSE_BAG.splice(eventsToDelete[i], 1);
-				}
+				jQuery('#calendar').weekCalendar('removeEvent', calEvent.id);
+			// 	var eventTitle = calEvent.title;
+			// 	var eventsToDelete = [];
+			// 	
+			// 	for(i in COURSE_BAG) {
+			// 		var e = COURSE_BAG[i];
+			// 		
+			// 		if(e.title == eventTitle) {
+			// 			jQuery('#calendar').weekCalendar('removeEvent', e.id);
+			// 			eventsToDelete.push(i);
+			// 		}
+			// 	}
+			// 	
+			// 	for(i in eventsToDelete) {
+			// 		COURSE_BAG.splice(eventsToDelete[i], 1);
+			// 	}
 			}
 		});
 		
