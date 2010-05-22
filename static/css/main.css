@@ -4,9 +4,9 @@
 }
 
 /* calendar */
-/*.wc-header td {
+.wc-header td {
 	background: url(/static/img/shader.png) repeat-x;
-}*/
+}
 
 #calendar {
 	width: 50%;
