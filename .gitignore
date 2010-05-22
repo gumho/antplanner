@@ -2,3 +2,4 @@ TODO
 index.yaml
 build.py
 *.pyc
+templates/__init__.py
