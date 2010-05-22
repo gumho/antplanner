@@ -30,7 +30,6 @@
          self._loadCalEvents();
          self._resizeCalendar();
          self._scrollToHour(self.options.date.getHours());
-
          $(window).unbind("resize.weekcalendar");
          $(window).bind("resize.weekcalendar", function() {
             self._resizeCalendar();
@@ -500,7 +499,12 @@
 
             var dayName = options.useShortDayNames ? options.shortDays[currentDay.getDay()] : options.longDays[currentDay.getDay()];
 
-            $(this).html(dayName + "<br/>" + self._formatDate(currentDay, options.dateFormat));
+			if(options.noHeaderDate != true) {
+            	$(this).html(dayName + "<br/>" + self._formatDate(currentDay, options.dateFormat));
+			} else {
+				$(this).html(dayName);
+			}
+			
             if (self._isToday(currentDay)) {
                $(this).addClass("wc-today");
             } else {
