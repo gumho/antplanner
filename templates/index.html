@@ -27,13 +27,13 @@
 	}
 	
 	//parses course string into readable format ie. INF 41 Software Reqs
-	function constructCourseName(courseString, courseType) {
+	function constructCourseName(courseString, courseType, courseCode) {
 		//removing the course name for now...it takes up too much space
 		//courseName = courseString.match(/<b>.*<\/b>/)[0].replace(/<.{1,2}>/g, '');
 		
 		courseNumber = courseString.match(/&nbsp;.*<font/)[0].replace('<font', '').replace(/&nbsp;/g, '').replace(/\s{2,}/g, ' ');
 		
-		return (courseNumber + courseType);
+		return (courseNumber + courseType + '<br/>(' + courseCode + ')');
 	}
 	
 	//returns an array containing the days a course occurs on
@@ -127,7 +127,7 @@
 	jQuery(document).ready(function() {
 		//initialize calendar
 		jQuery('#calendar').weekCalendar({
-			timeslotsPerHour: 2,
+			timeslotsPerHour: 3,
 			useShortDayNames: true,
 			noHeaderDate: true,
 			firstDayOfWeek: 1,
@@ -151,17 +151,13 @@
 					
 					if(e.title == eventTitle) {
 						jQuery('#calendar').weekCalendar('removeEvent', e.id);
+						eventsToDelete.push(i);
 					}
-					
-					eventsToDelete.push(i);
 				}
 				
-				//remove courses from the course bag 
 				for(i in eventsToDelete) {
-					COURSE_BAG.splice(i, 1);
+					COURSE_BAG.splice(eventsToDelete[i], 1);
 				}
-				
-				alert(COURSE_BAG.length);
 			}
 		});
 		
@@ -185,11 +181,13 @@
 					broadcastMessage("Course time is 'TBA'");
 					return false;
 				}
+				
+				courseCode = jQuery(this).find('td').eq(0).html();
 				courseType = jQuery(this).find('td').eq(1).html();
 				courseString = jQuery(this).prevAll().find('.CourseTitle:last').html();
 				
 				var calEvents = createEvents(
-					constructCourseName(courseString, courseType),
+					constructCourseName(courseString, courseType, courseCode),
 					getCourseDays(timeString), 
 					getCourseTime(timeString)
 				);
