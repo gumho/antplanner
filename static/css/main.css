@@ -13,6 +13,10 @@
 	background: url(/static/img/shader.png) repeat-x;
 }
 
+.wc-cal-event:hover {
+	cursor: pointer;
+}
+
 /* school iframe*/
 iframe#school {
 	border: none;
