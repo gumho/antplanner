@@ -26,6 +26,7 @@
          alwaysDisplayTimeMinutes: true,
          use24Hour : false,
          daysToShow : 7,
+		 showHeaderDate : true,
          firstDayOfWeek : 0, // 0 = Sunday, 1 = Monday, 2 = Tuesday, ... , 6 = Saturday
          useShortDayNames: false,
          timeSeparator : " to ",
@@ -601,7 +602,7 @@
 
             var dayName = options.useShortDayNames ? options.shortDays[currentDay.getDay()] : options.longDays[currentDay.getDay()];
 
-			if(options.noHeaderDate != true) {
+			if(options.showHeaderDate == true) {
             	$(this).html(dayName + "<br/>" + self._formatDate(currentDay, options.dateFormat));
 			} else {
 				$(this).html(dayName);
