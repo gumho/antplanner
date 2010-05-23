@@ -19,8 +19,8 @@
 
 /* school iframe*/
 iframe#school {
+	overflow: scroll;
 	border: none;
 	width: 50%;
-	height: 100%;
 	float: left;
 }

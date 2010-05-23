@@ -127,6 +127,11 @@
 	}
 	
 	jQuery(document).ready(function() {
+		//set school iframe height on window resize
+		jQuery(window).resize(function() {
+			jQuery('#school').css('height', jQuery(window).height() - jQuery('#header').height());
+		});
+		
 		//initialize calendar
 		jQuery('#calendar').weekCalendar({
 			timeslotsPerHour: 4,
@@ -149,21 +154,21 @@
 			},
 			eventClick : function(calEvent, element) {
 				jQuery('#calendar').weekCalendar('removeEvent', calEvent.id);
-			// 	var eventTitle = calEvent.title;
-			// 	var eventsToDelete = [];
-			// 	
-			// 	for(i in COURSE_BAG) {
-			// 		var e = COURSE_BAG[i];
-			// 		
-			// 		if(e.title == eventTitle) {
-			// 			jQuery('#calendar').weekCalendar('removeEvent', e.id);
-			// 			eventsToDelete.push(i);
-			// 		}
-			// 	}
-			// 	
-			// 	for(i in eventsToDelete) {
-			// 		COURSE_BAG.splice(eventsToDelete[i], 1);
-			// 	}
+				// var eventTitle = calEvent.title;
+				// var eventsToDelete = [];
+				// 
+				// for(i in COURSE_BAG) {
+				// 	var e = COURSE_BAG[i];
+				// 	
+				// 	if(e.title == eventTitle) {
+				// 		jQuery('#calendar').weekCalendar('removeEvent', e.id);
+				// 		eventsToDelete.push(i);
+				// 	}
+				// }
+				// 
+				// for(i in eventsToDelete) {
+				// 	COURSE_BAG.splice(eventsToDelete[i], 1);
+				// }
 			}
 		});
 		
@@ -208,10 +213,12 @@
 	</script>
 
 </head>
-<body style="overflow: hidden">
+<body style="overflow-y: hidden">
 	<div id="wrapper">
 		<div id="header">
-			Ant Planner
+			<h1>Ant Planner</h1>
+			<p>You do this: 1) pick a class 2) click on the class you want 3) it shows up</p>
+			<p><em>P.S. This is a pre-alpha release...Things might (will)be broken</em></p>
 		</div>
 
 		<div id="calendar">
