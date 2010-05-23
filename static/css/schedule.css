@@ -1,6 +1,16 @@
 
 /* schedules*/
 
+a.back-button {
+	color:#fff;
+	font-family:arial;
+	font-size:30px;
+	margin-bottom:13px;
+	margin-left:31px;
+	padding:5px;
+	background: #ff0000;
+}
+
 .course-list tr {
 	cursor: crosshair;
 	font-size: 12px;
