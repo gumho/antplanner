@@ -3,6 +3,15 @@
 	padding: 0;
 }
 
+#header {
+	font-family: arial;
+	margin: 10px;
+}
+
+	#header em {
+		color: grey;
+	}
+
 /* calendar */
 #calendar {
 	width: 50%;

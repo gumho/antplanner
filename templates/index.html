@@ -127,7 +127,8 @@
 	}
 	
 	jQuery(document).ready(function() {
-		//set school iframe height on window resize
+		//set school iframe height and handler for window resize
+		jQuery('#school').css('height', jQuery(window).height() - jQuery('#header').height());
 		jQuery(window).resize(function() {
 			jQuery('#school').css('height', jQuery(window).height() - jQuery('#header').height());
 		});
@@ -217,7 +218,7 @@
 	<div id="wrapper">
 		<div id="header">
 			<h1>Ant Planner</h1>
-			<p>You do this: 1) pick a class 2) click on the class you want 3) it shows up</p>
+			<p>You do this: <strong>1)</strong> pick a class <strong>2)</strong> click on the class you want <strong>3)</strong> it shows up</p>
 			<p><em>P.S. This is a pre-alpha release...Things might (will)be broken</em></p>
 		</div>
 
