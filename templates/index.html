@@ -149,7 +149,7 @@
 			buttons: false,
 			defaultEventLength: 0,
 			height: function(jQuerycalendar){
-				return jQuery(window).height() - jQuery('#header').height();
+				return jQuery(window).height() - jQuery('#header').height() - headerVertMargin;
 			},
 			draggable : function(calEvent, eventElement) {	return false; },
 			resizable : function(calEvent, eventElement) {	return false; },
@@ -197,18 +197,25 @@
 					return false;
 				}
 				
-				courseCode = jQuery(this).find('td').eq(0).html();
-				courseType = jQuery(this).find('td').eq(1).html();
-				courseString = jQuery(this).prevAll().find('.CourseTitle:last').html();
+				//parse for course information
+				var courseCode = jQuery(this).find('td').eq(0).html();
+				var courseType = jQuery(this).find('td').eq(1).html();
+				var courseString = jQuery(this).prevAll().find('.CourseTitle:last').html();
+				
+				var courseTime = getCourseTime(timeString);
 				
 				var calEvents = createEvents(
 					constructCourseName(courseString, courseType, courseCode),
 					getCourseDays(timeString), 
-					getCourseTime(timeString)
+					courseTime
 				);
 				
+				//scroll calendar viewport to expect newly added course events
+				jQuery('#calendar').weekCalendar('scrollToHour', courseTime.startHour);
+				
+				//create the course events
 				for(i in calEvents) {
-					jQuery("#calendar").weekCalendar("updateEvent", calEvents[i]);
+					jQuery('#calendar').weekCalendar('updateEvent', calEvents[i]);
 				}
 			});
 		});

@@ -119,6 +119,13 @@
          this._loadCalEvents(this.element.data("startDate")); //reload with existing week
       },
 
+	  /*
+	   * Scrolls to the set hour on the calendar
+	   */
+	  scrollToHour : function(hour) {
+	  	 this._scrollToHour(hour);
+	  },
+		
       /*
        * Clear all events currently loaded into the calendar
        */
