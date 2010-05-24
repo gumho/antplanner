@@ -9,7 +9,11 @@ a { color: #688FE7; }
 	font-family: arial;
 	margin: 10px;
 }
-
+	
+	#header h1 span {
+		color: #688FE7;
+	}
+	
 	#header em {
 		color: grey;
 	}
