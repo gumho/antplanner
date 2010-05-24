@@ -1,0 +1,109 @@
+
+/* schedules*/
+
+body {
+	margin: 0;
+}
+
+#school-options-bar {
+	background: url(/static/img/shader.png) repeat-x scroll 0 0 transparent;
+	height: 32px;
+	border-top: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	width: 100%;
+	font-family: arial;
+	position: fixed;
+}
+
+.school-options-button, .school-options-button-last {
+	text-shadow: 0px 1px 0px #fff;
+	background: url(/static/img/button.png) repeat-x scroll 0 0 transparent;
+	color: #000;
+	margin-left: 20px;
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	text-decoration: none;
+	border-left: 1px solid #aaa;
+	position: absolute;
+}
+
+.school-options-button-last {
+	border-right: 1px solid #aaa;
+}
+
+.school-options-button-last:hover, .school-options-button:hover {
+	background: url(/static/img/button-hover.png) repeat-x scroll 0 0 transparent;
+}
+
+.course-list tr {
+	cursor: crosshair;
+	font-size: 12px;
+}
+
+.course-list td {
+	padding: 2px;
+}
+.course-list table {
+   empty-cells: show;
+}
+
+
+.course-list tr.college-title td{
+   border-bottom: solid white 3px;
+   padding: 0.45em;
+   background-color: black;
+   white-space: nowrap;
+   text-align: center;
+   color: white;
+   font-family: Arial,Helvetica,sans-serif;
+   font-size:130%;
+   font-weight: bold
+}
+
+.course-list tr.college-comment td,
+.course-list tr.dept-comment td,
+.course-list tr.num-range-comment td,
+.course-list tr.ccode-range-comment td{
+   border: solid navy 3px;
+   background-color: #E7E7E7;
+   text-align: left;
+   font: 80% Times New Roman,Times,serif;
+}
+.course-list tr.num-range-comment td{
+   background-color: #efe7ef;
+}
+.course-list tr.college-comment p,
+.course-list tr.dept-comment p,
+.course-list tr.num-range-comment p,
+.course-list tr.ccode-range-comment p{
+   margin: 0.5em 0 0.5em 0;
+}
+
+.course-list tr p.comment-heading {
+   word-spacing: 0.2em;
+/* letter-spacing: 1px; */
+   font-size: 125%;
+   font-weight: bold;
+}
+
+.course-list tr.dept-title td{
+   border-top: solid white 2px;
+   border-bottom: solid white 3px;
+   padding-left: 0.7em;
+   background-color: navy;
+   white-space: nowrap;
+   color: white;
+   font-family: sans-serif;
+   font-size: 100%;
+   font-weight: bold
+}
+.course-list tr.dept-title a:link, .course-list tr.dept-title a:visited{
+   color: white;
+}
+
+.course-list td.Pct100 { font-size:100%;  }  /* need unscaled size to protect inner tables. */
+.course-list td.CourseTitle { color:black; font-size:100%; }
+.course-list td td.Comments { color:black; font-size:80%;  }
+.course-summary dd{ font-size:80%; }

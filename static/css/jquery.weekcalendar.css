@@ -25,6 +25,7 @@
 }
 
 .wc-header {
+	height: 34px;
 	background: #eee;
 	border-top: 1px solid #aaa;
 	border-bottom: 1px solid #aaa;
