@@ -1431,7 +1431,7 @@
    });
 
    $.extend($.ui.weekCalendar, {
-      version: '1.2.2-pre',
+      version: '1.2.2-pre'
 
    });
 
