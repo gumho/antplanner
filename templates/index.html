@@ -128,9 +128,12 @@
 	
 	jQuery(document).ready(function() {
 		//set school iframe height and handler for window resize
-		jQuery('#school').css('height', jQuery(window).height() - jQuery('#header').height());
+		var headerVertMargin = parseInt(jQuery('#header').css('margin-top')) * 2;
+
+		jQuery('#school').css('height', jQuery(window).height() - jQuery('#header').height() - headerVertMargin);
+		
 		jQuery(window).resize(function() {
-			jQuery('#school').css('height', jQuery(window).height() - jQuery('#header').height());
+			jQuery('#school').css('height', jQuery(window).height() - jQuery('#header').height() - headerVertMargin);
 		});
 		
 		//initialize calendar
