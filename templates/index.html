@@ -32,8 +32,8 @@
 	function constructCourseName(courseString, courseType, courseCode) {
 		//removing the course name for now...it takes up too much space
 		//courseName = courseString.match(/<b>.*<\/b>/)[0].replace(/<.{1,2}>/g, '');
-		
-		courseNumber = courseString.match(/&nbsp;.*<font/)[0].replace('<font', '').replace(/&nbsp;/g, '').replace(/\s{2,}/g, ' ');
+		alert(courseString);
+		courseNumber = courseString.match(/&nbsp;.*<font/i)[0].replace('<font', '').replace(/&nbsp;/g, '').replace(/\s{2,}/g, ' ');
 		
 		return (courseNumber + courseType + '<br/>(' + courseCode + ')');
 	}
