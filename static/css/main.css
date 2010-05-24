@@ -30,7 +30,7 @@ a { color: #688FE7; }
 
 /* school iframe*/
 iframe#school {
-	overflow: scroll;
+	overflow: auto;
 	border: none;
 	width: 50%;
 	float: left;
