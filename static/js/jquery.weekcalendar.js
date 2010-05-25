@@ -99,7 +99,7 @@
          self._loadCalEvents();
 
          self._resizeCalendar();
-         self._scrollToHour(self.options.date.getHours());
+         //self._scrollToHour(self.options.date.getHours());
 
          $(window).unbind("resize.weekcalendar");
          $(window).bind("resize.weekcalendar", function() {
