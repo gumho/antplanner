@@ -19,7 +19,6 @@
 	var START_MONTH = 4; //static calendar month (May)
 	var START_DAY = 3; //Monday the 3rd 
 	
-	var COURSE_BAG = []; //stores all courses on the calendar
 	var ID_COUNT = 0;
 	
 	function broadcastMessage(message) {
@@ -121,9 +120,6 @@
 			};
 			
 			calEvents.push(e);
-			
-			//add calEvent to the global course storage
-			COURSE_BAG.push(e);
 		}
 		
 		return calEvents;
@@ -154,11 +150,8 @@
 			height: function(jQuerycalendar){
 				return jQuery(window).height() - jQuery('#header').height() - headerVertMargin;
 			},
-			draggable : function(calEvent, eventElement) {	return false; },
-			resizable : function(calEvent, eventElement) {	return false; },
-			eventNew : function(calEvent, element) {
-				//TODO: different colors for different courses
-			},
+			draggable : function(calEvent, element) {	return false; },
+			resizable : function(calEvent, element) {	return false; },
 			eventClick : function(calEvent, element) {
 				jQuery('#calendar').weekCalendar('removeEvent', calEvent.id);
 				// var eventTitle = calEvent.title;
@@ -218,6 +211,7 @@
 				
 				//create the course events
 				for(i in calEvents) {
+					//create the events
 					jQuery('#calendar').weekCalendar('updateEvent', calEvents[i]);
 				}
 			});
