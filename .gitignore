@@ -3,3 +3,4 @@ index.yaml
 build.py
 *.pyc
 templates/__init__.py
+compile_template.py
