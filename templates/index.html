@@ -1,6 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>Ant Planner</title>
 
@@ -13,6 +14,7 @@
 	<script type='text/javascript' src='/static/js/jquery.weekcalendar.js'></script>
 	
 	<script type="text/javascript" charset="utf-8">
+	/* <![CDATA[ */
 	
 	var START_YEAR = 2010; //static calendar year
 	var START_MONTH = 4; //static calendar month (May)
@@ -236,14 +238,14 @@
 	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
-
+	/* ]]> */
 	</script>
 
 </head>
 <body style="overflow-y: hidden">
 	<div id="wrapper">
 		<div id="header">
-			<h1>Ant<span>Planner<span></h1>
+			<h1>Ant<span>Planner</span></h1>
 			<p>You do this: <strong>1)</strong> pick a class <strong>2)</strong> click anywhere on the row of the class you want <strong>3) </strong> it shows up  <strong>4)</strong> click the calendar events to remove <strong>5)</strong> rinse, repeat...</p>
 			<p><em>P.S. This is a pre-alpha release...Many things are broken, many things have not been implemented (see <a href="http://github.com/gumho/ant-planner/issues/">issues</a>) -ryan</em></p>
 		</div>
