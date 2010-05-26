@@ -5,6 +5,10 @@
 
 a { color: #688FE7; }
 
+html, body#index {
+	overflow: hidden;
+}
+
 #header {
 	font-family: arial;
 	margin: 10px;
@@ -18,7 +22,7 @@ a { color: #688FE7; }
 		color: grey;
 	}
 
-/* calendar */
+/*---------CALENDAR---------*/
 #calendar {
 	width: 50%;
 	float: left;
