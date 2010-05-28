@@ -4,7 +4,9 @@
 }
 
 a { color: #688FE7; }
-
+h1 { font-size: 26px;}
+h2 { font-size: 12px;}
+p { font-size: 12px; }
 html, body#index {
 	overflow: hidden;
 }
@@ -14,12 +16,21 @@ html, body#index {
 	margin: 10px;
 }
 	
-	#header h1 span {
+	#header h1 {
+		font-weight: normal;
 		color: #688FE7;
 	}
 	
-	#header em {
-		color: grey;
+	#header h2 {
+		font
+	}
+	
+	#header p {
+		margin-top: 5px;
+	}
+	
+	#temp {
+		color: red;
 	}
 
 /*---------CALENDAR---------*/
