@@ -1,5 +1,4 @@
 
-/* schedules*/
 
 body {
 	margin: 0;
@@ -36,6 +35,15 @@ body {
 .school-options-button-last:hover, .school-options-button:hover {
 	background: url(/static/img/button-hover.png) repeat-x scroll 0 0 transparent;
 }
+
+/* ----------- search ------------*/
+p#submit-container {
+	width: 100px;
+	margin: 15px auto;
+}
+
+
+/* ----------- schedules ------------*/
 
 .course-list tr {
 	cursor: crosshair;
