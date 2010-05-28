@@ -3,6 +3,7 @@ import urllib
 import scraper
 
 from google.appengine.api import urlfetch 
+from google.appengine.api import memcache
 
 urls = (
 	'/', 'index',
@@ -18,12 +19,17 @@ class index:
 
 class search:
 	def GET(self):
-		try:
-			search_page = urlfetch.fetch("http://websoc.reg.uci.edu")
-			result = scraper.strip_search(search_page.content)
-		except urlfetch.Error:
-			return "UCI webpage down at the moment"
-		return render.search(result)
+		search_page = memcache.get("SEARCH")
+		
+		if search_page is None:
+			try:
+				raw_page = urlfetch.fetch("http://websoc.reg.uci.edu")
+				search_page = scraper.strip_search(raw_page.content)
+				memcache.add("SEARCH", search_page, 60 * 60)
+			except urlfetch.Error:
+				search_page = "UCI webpage is not available at the moment"
+		
+		return render.search(search_page)
 
 class schedules:
 	def POST(self):
@@ -52,16 +58,21 @@ class schedules:
 			"YearTerm": p.YearTerm,
 		}
 		form_data = urllib.urlencode(form_fields)
-		try:
-			schedule_page = urlfetch.fetch("http://websoc.reg.uci.edu",
-											payload=form_data,
-											method=urlfetch.POST,
-											headers={'Content-Type': 'application/x-www-form-urlencoded'})
-			result = scraper.strip_schedule(schedule_page.content)
-		except urlfetch.Error:
-			result = "UCI webpage down at the moment"
 		
-		return render.schedule(result)
+		schedule_page = memcache.get(p.Dept)
+		
+		if schedule_page is None:
+			try:
+				raw_page = urlfetch.fetch("http://websoc.reg.uci.edu",
+												payload=form_data,
+												method=urlfetch.POST,
+												headers={'Content-Type': 'application/x-www-form-urlencoded'})
+				schedule_page = scraper.strip_schedule(raw_page.content)
+				memcache.add(p.Dept, schedule_page, 60 * 60)
+			except urlfetch.Error:
+				schedule_page = "UCI webpage is not available at the moment"
+		
+		return render.schedule(schedule_page)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
