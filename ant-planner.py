@@ -1,5 +1,7 @@
 import web
 import urllib
+import hashlib
+
 import scraper
 
 from google.appengine.api import urlfetch 
@@ -59,7 +61,14 @@ class schedules:
 		}
 		form_data = urllib.urlencode(form_fields)
 		
-		schedule_page = memcache.get(p.Dept)
+		form_concat = ''
+		for k, v in form_fields.items():
+			form_concat += v
+		
+		#md5 hash of all the form fields used for memcached key
+		form_hash = hashlib.md5(form_concat).hexdigest()
+		
+		schedule_page = memcache.get(form_hash)
 		
 		if schedule_page is None:
 			try:
@@ -68,7 +77,7 @@ class schedules:
 												method=urlfetch.POST,
 												headers={'Content-Type': 'application/x-www-form-urlencoded'})
 				schedule_page = scraper.strip_schedule(raw_page.content)
-				memcache.add(p.Dept, schedule_page, 60 * 60)
+				memcache.add(form_hash, schedule_page, 60 * 60)
 			except urlfetch.Error:
 				schedule_page = "UCI webpage is not available at the moment"
 		
