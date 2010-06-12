@@ -17,7 +17,8 @@
 	<script type='text/javascript' src='/static/js/jquery.weekcalendar.js'></script>
 	
 	<script type="text/javascript" charset="utf-8">
-
+	var COURSE_BAG = [];
+	
 	var START_YEAR = 2010; //static calendar year
 	var START_MONTH = 4; //static calendar month (May)
 	var START_DAY = 3; //Monday the 3rd 
@@ -128,6 +129,10 @@
 		return calEvents;
 	}
 	
+	function removeCourses(id) {
+		// body...
+	}
+	
 	jQuery(document).ready(function() {
 		//set school iframe height and handler for window resize
 		var headerVertMargin = parseInt(jQuery('#header').css('margin-top')) * 2;
@@ -155,23 +160,17 @@
 			},
 			draggable : function(calEvent, element) {	return false; },
 			resizable : function(calEvent, element) {	return false; },
-			eventClick : function(calEvent, element) {
-				jQuery('#calendar').weekCalendar('removeEvent', calEvent.id);
-				// var eventTitle = calEvent.title;
-				// var eventsToDelete = [];
-				// 
-				// for(i in COURSE_BAG) {
-				// 	var e = COURSE_BAG[i];
-				// 	
-				// 	if(e.title == eventTitle) {
-				// 		jQuery('#calendar').weekCalendar('removeEvent', e.id);
-				// 		eventsToDelete.push(i);
-				// 	}
-				// }
-				// 
-				// for(i in eventsToDelete) {
-				// 	COURSE_BAG.splice(eventsToDelete[i], 1);
-				// }
+			eventClick : function(calEvent, element) {								
+				for(i in COURSE_BAG) {
+					if(calEvent.title == COURSE_BAG[i].title) {
+						var removalID = COURSE_BAG[i].id;
+						
+						jQuery('#calendar').weekCalendar('removeEvent', removalID);
+						delete COURSE_BAG[i];
+					}
+				}
+				
+				//TODO: clean up undefined after 'deletes'
 			}
 		});
 		
@@ -216,6 +215,8 @@
 				for(i in calEvents) {
 					//create the events
 					jQuery('#calendar').weekCalendar('updateEvent', calEvents[i]);
+					
+					COURSE_BAG.push(calEvents[i]);
 				}
 			});
 		});
