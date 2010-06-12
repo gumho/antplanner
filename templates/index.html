@@ -62,6 +62,15 @@
 		return palette[Math.floor(Math.random() * palette.length)];
 	}
 	
+	function isDuplicateCourse(courseString) {
+		for(i in COURSE_BAG) {
+			if(COURSE_BAG[i].title == courseString) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	//parses course string into readable format ie. INF 41 Software Reqs
 	function constructCourseName(courseString, courseType, courseCode) {
 		//removing the course name for now...it takes up too much space
@@ -184,7 +193,8 @@
 			},
 			draggable : function(calEvent, element) {	return false; },
 			resizable : function(calEvent, element) {	return false; },
-			eventClick : function(calEvent, element) {								
+			eventClick : function(calEvent, element) {		
+				//handler for removing courses						
 				for(i in COURSE_BAG) {
 					if(calEvent.title == COURSE_BAG[i].title) {
 						var removalID = COURSE_BAG[i].id;
@@ -224,18 +234,24 @@
 				var courseType = jQuery(this).find('td').eq(1).html();
 				var courseString = jQuery(this).prevAll().find('.CourseTitle:last').html();
 				
-				var courseTime = getCourseTime(timeString);
+				var courseName = constructCourseName(courseString, courseType, courseCode);
+				if(isDuplicateCourse(courseName)) {
+					broadcastMessage("You have already added that course!");
+					return false;
+				}
 				
+				var courseTime = getCourseTime(timeString);
+				//scroll calendar viewport to expect newly added course events
+				jQuery('#calendar').weekCalendar('scrollToHour', courseTime.startHour);
+				
+				//create the array of cal events
 				var calEvents = createEvents(
-					constructCourseName(courseString, courseType, courseCode),
+					courseName,
 					getCourseDays(timeString), 
 					courseTime
 				);
 				
-				//scroll calendar viewport to expect newly added course events
-				jQuery('#calendar').weekCalendar('scrollToHour', courseTime.startHour);
-				
-				//assign color for the event
+				//generate color for the event
 				var colorPairing = genColorPair();
 				
 				//create the course events
