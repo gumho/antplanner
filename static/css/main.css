@@ -6,9 +6,13 @@
 a { color: #688FE7; }
 h1 { font-size: 26px;}
 h2 { font-size: 12px;}
-p { font-size: 12px; }
+p, a { font-size: 12px; }
 html, body#index {
 	overflow: hidden;
+}
+
+#temp {
+	color: #ff0000
 }
 
 #header {
@@ -28,15 +32,15 @@ html, body#index {
 	#header p {
 		margin-top: 5px;
 	}
-	
-	#temp {
-		color: red;
-	}
 
 /*---------CALENDAR---------*/
 #calendar {
 	width: 50%;
 	float: left;
+}
+
+#clear-calendar {
+	font-size: 16px;
 }
 
 .wc-header td {
