@@ -6,6 +6,12 @@ $def with (search_form)
 <head>
 	<title>Search</title>
 	<link rel='stylesheet' type='text/css' href='/static/css/school.css' />
+	<script type="text/javascript" charset="utf-8">
+	window.onload=function() {
+		document.forms[0].elements['ShowComments'].checked = false;
+		document.forms[0].elements['ShowFinals'].checked = false;
+	}
+	</script>
 </head>
 <body>
 	<div id="school-options-bar">
