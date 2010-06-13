@@ -52,13 +52,17 @@ class schedules:
 			"FullCourses": p.FullCourses,
 			"InstrName": p.InstrName,
 			"MaxCap": p.MaxCap,
-			"ShowComments": p.ShowComments,
-			"ShowFinals": p.ShowFinals,
 			"StartTime": p.StartTime,
 			"Submit": p.Submit,
 			"Units": p.Units,
 			"YearTerm": p.YearTerm,
 		}
+		
+		try:
+			form_fields["ShowComments"] = p.ShowComments
+			form_fields["ShowFinals"] = p.ShowFinals
+		except AttributeError, e:
+			pass
 		form_data = urllib.urlencode(form_fields)
 		
 		form_concat = ''
