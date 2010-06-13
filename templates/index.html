@@ -17,6 +17,10 @@
 	<script type='text/javascript' src='/static/js/jquery.weekcalendar.gumho.js'></script>
 	
 	<script type="text/javascript" charset="utf-8">
+	var SCHEDULE_CODE_INDEX = 0;
+	var SCHEDULE_TYPE_INDEX = 1;
+	var SCHEDULE_TIME_INDEX = 5;
+	
 	var COURSE_BAG = [];
 	
 	var START_YEAR = 2010; //static calendar year
@@ -217,7 +221,7 @@
 			
 			jQuery('tr', list).click(function() {
 
-				timeString = jQuery(this).find('td').eq(5).html();
+				timeString = jQuery(this).find('td').eq(SCHEDULE_TIME_INDEX).html();
 				
 				if(timeString == null) {
 					broadcastMessage("You didn't click on a course.");
@@ -230,8 +234,8 @@
 				}
 				
 				//parse for course information
-				var courseCode = jQuery(this).find('td').eq(0).html();
-				var courseType = jQuery(this).find('td').eq(1).html();
+				var courseCode = jQuery(this).find('td').eq(SCHEDULE_CODE_INDEX).html();
+				var courseType = jQuery(this).find('td').eq(SCHEDULE_TYPE_INDEX).html();
 				var courseString = jQuery(this).prevAll().find('.CourseTitle:last').html();
 				
 				var courseName = constructCourseName(courseString, courseType, courseCode);
