@@ -257,7 +257,14 @@
          }
       },
 
-
+	  resizeCalendar : function(height) {
+         if (height) {
+			this.options.height = function(jQueryCalendar) {
+				return height;
+			}
+            this._resizeCalendar();
+         }
+      },
 
 
 
