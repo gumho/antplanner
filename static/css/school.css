@@ -44,6 +44,9 @@ p#submit-container {
 
 
 /* ----------- schedules ------------*/
+#error {
+	margin: 10px;
+}
 
 .course-list tr {
 	cursor: crosshair;
