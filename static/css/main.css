@@ -46,6 +46,7 @@ html, body#index {
 	#pull-tab {
 		position: absolute;
 		right: 10px;
+		color: #ccc;
 	}
 
 /*---------CALENDAR---------*/
