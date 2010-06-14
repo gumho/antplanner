@@ -16,6 +16,6 @@ def strip_search(html):
 def strip_schedule(html):
 	schedule_html = BeautifulSoup(html).find('div', 'course-list')
 	if schedule_html is None:
-		return "<p id=\"error\">Not a valid selection</p>"
+		return "<p id=\"error\">No courses were found.</p>"
 	else:
 		return str(schedule_html)
