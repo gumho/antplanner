@@ -9,7 +9,7 @@ def strip_search(html):
 	#remove 'Display Text Results' button
 	text_buttons = form_html.findAll(attrs={"class" : "banner-width"})
 	for i in text_buttons:
-		i.replaceWith('<p id=\"submit-container\"><input type="submit" value="Display Web Results" name="Submit"></p>')
+		i.replaceWith('<p id=\"submit-container\"><input type="submit" value="Display Results" name="Submit"></p>')
 	
 	return str(form_html)
 	
