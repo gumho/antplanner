@@ -177,7 +177,11 @@
 	
 	function getTopDivHeights() {
 		var heights = function() {
-			return jQuery(window).height() - jQuery('#header').outerHeight() - jQuery('#controls').outerHeight();
+			if(jQuery('#header').is(":visible")) {
+				return jQuery(window).height() - jQuery('#header').outerHeight() - jQuery('#controls').outerHeight();
+			} else {
+				return jQuery(window).height() - jQuery('#controls').outerHeight();
+			}
 		}
 		
 		return heights();
@@ -219,15 +223,16 @@
 						delete COURSE_BAG[i];
 					}
 				}
-				
+				//
 				//TODO: clean up undefined after 'deletes'
+				//
 			}
 		});
 		
 		//switch calendar view to the static date, rather than today's view
 		jQuery('#calendar').weekCalendar('gotoWeek',  new Date(START_YEAR, START_MONTH, START_DAY));
 		
-		//----HANDLERS-----
+		//school handlers
 		jQuery('#school').load(function() {
 			var list = jQuery('.course-list', frames['school'].document);
 			
@@ -285,9 +290,9 @@
 			});
 		});
 		
-		//event handlers
+		//other event handlers
 		jQuery(window).resize(function() {
-			jQuery('#school').css('height', getTopDivHeights());
+			resizeLowerContent();
 		});
 				
 		jQuery('a#clear-calendar').click(function() {
@@ -301,12 +306,12 @@
 				jQuery('#header').slideUp();
 				jQuery('#school').css('height', newHeight);
 				jQuery('#calendar').weekCalendar('resizeCalendar', newHeight);
-				return false;
 			}, function() {
 				jQuery(this).html('More room please!');
+				var newHeight = jQuery(window).height() - jQuery('#header').outerHeight() - jQuery('#controls').outerHeight();
 				jQuery('#header').slideDown();
-				resizeLowerContent();
-				return false;
+				jQuery('#school').css('height', newHeight);
+				jQuery('#calendar').weekCalendar('resizeCalendar', newHeight);
 			}
 		);
 		
@@ -314,17 +319,14 @@
 	</script>
 	
 	<script type="text/javascript">
-
 	  var _gaq = _gaq || [];
 	  _gaq.push(['_setAccount', 'UA-16581503-1']);
 	  _gaq.push(['_trackPageview']);
-
 	  (function() {
 	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
-
 	</script>
 
 </head>
