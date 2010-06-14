@@ -15,9 +15,12 @@ html, body#index {
 	color: #ff0000;
 }
 
-#header {
+#header, #controls {
 	font-family: arial;
-	margin: 10px;
+}
+
+#header {
+	padding: 10px;
 }
 	
 	#header h1 {
@@ -29,14 +32,26 @@ html, body#index {
 		margin-top: 5px;
 	}
 
+#controls {
+	padding: 10px;
+	position: relative;
+}
+	#controls a {
+		font-size: 16px;
+	}
+
+	#clear-calendar {
+	}
+
+	#pull-tab {
+		position: absolute;
+		right: 10px;
+	}
+
 /*---------CALENDAR---------*/
 #calendar {
 	width: 50%;
 	float: left;
-}
-
-#clear-calendar {
-	font-size: 16px;
 }
 
 .wc-header td {
