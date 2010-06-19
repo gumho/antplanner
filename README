@@ -12,9 +12,11 @@ an organized manner, an idea inspired by Zot Scheduler (http://www.ocf.berkeley.
 
 Ant Planner is written in Python using the web.py framework and is meant to be
 run on Google App Engine. If you would like to extend Ant Planner and build so it can 
-be run without GAE, the pleasure is yours...fork!
+be run without GAE, the pleasure is yours...fork! Ant Planner currently works in Chrome, 
+Safari, Firefox, and Internet Explorer 7+
 
-This is considered an alpha release. Many features have not yet been 
+
+This is considered a beta release. Many features have not yet been 
 implemented. Beware!
 
 === INSTRUCTIONS ===
