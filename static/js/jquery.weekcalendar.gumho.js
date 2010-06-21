@@ -1115,11 +1115,11 @@
             }
             
          }
-
-         var $target = this.element.find(".wc-grid-timeslot-header .wc-hour-header:eq(" + slot + ")");
-
-         var targetOffset = $target.offset().top;
-         var scroll = targetOffset - $scrollable.offset().top - $target.outerHeight();
+		 //scroll to the hour plus some padding so that hour is in middle of viewport
+         var hourHeaderHeight = this.element.find(".wc-grid-timeslot-header .wc-hour-header").outerHeight();
+		 var calHeight = this.element.find(".wc-scrollable-grid").outerHeight();
+		 var scroll = (hourHeaderHeight * slot) - calHeight/3;
+		
          $scrollable.animate({scrollTop: scroll}, options.scrollToHourMillis);
       },
 
