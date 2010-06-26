@@ -1,39 +1,50 @@
-Welcome to Ant Planner!
+Welcome to AntPlanner!
 
 === OVERVIEW ===
 
-Ant Planner is a tool for helping students of the UC Irvine schedule classes. 
+AntPlanner is a tool for helping students of the UC Irvine schedule classes. 
 As most students know, the Schedule of Classes (Web Soc) does a sub-par job of 
-displaying information in a useful manner. Planning for classes is a menial task 
+displaying information in a useful manner. Planning for classes is a time-consuming task 
 and Web Soc does not help at all. Ant Planner aims to ease this process by 
 providing extensions to Web Soc for filtering classes and creating a more streamlined 
 interface. Most importantly, a weekly calendar for seeing course times laid out in 
-an organized manner, an idea inspired by Zot Scheduler (http://www.ocf.berkeley.edu/~mlyang/scheduler/). 
+an organized manner, an idea inspired by Zot Scheduler, 
+http://www.ocf.berkeley.edu/~mlyang/scheduler/, now defunct. 
 
-Ant Planner is written in Python using the web.py framework and is meant to be
-run on Google App Engine. If you would like to extend Ant Planner and build so it can 
-be run without GAE, the pleasure is yours...fork! Ant Planner currently works in Chrome, 
-Safari, Firefox, and Internet Explorer 7+
-
+AntPlanner is written in Python using the web.py framework and is meant to be
+run on Google App Engine. If you would like to extend AntPlanner and build so it can 
+be run without GAE, the pleasure is yours...fork! 
 
 This is considered a beta release. Many features have not yet been 
-implemented. Beware!
+implemented and there are some known issues. Beware!
+
+
+=== Compatibility ===
+
+AntPlanner runs perfectly on most browsers:
+
+-Mozilla Firefox 3+
+-Webkit browsers (Chrome, Safari)
+-Internet Explorer 7+
+
+Opera is not supported at this time. 
 
 === INSTRUCTIONS ===
 
-Ant Planner uses Templetor templating system. When serving on GAE, templates need to be 
+AntPlanner uses Templetor templating system. When serving on GAE, templates need to be 
 compiled before serving the pages since the Python parser module is blocked by GAE. 
 After changes to templates are made, you need to issue the following before running to 
 see changes:
 
 	$python web/template.py --compile templates/
 	
-Then, to use the GAE GUI to run the app or issue:
+To run the app, use the GoogleAppEngineLauncher or issue the following :
 
 	$dev_appserver.py .
 
 
 === DISCLAIMER ===
+
 Ant Planner is not officially recognized by UC Irvine. The authors of this application are not 
-responsible for anything that happens as a result from using the application. Use at your own risk! 
+responsible for mistakes or inconsistencies that may appear on the site. Use at your own risk! 
 At the time of this release, WebSoc is version 3.2
