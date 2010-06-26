@@ -7,4 +7,4 @@ handlers:
 - url: /static
   static_dir: static
 - url: .*
-  script: ant-planner.py
+  script: antplanner.py
