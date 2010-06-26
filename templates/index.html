@@ -175,7 +175,7 @@
 		return calEvents;
 	}
 	
-	function getTopDivHeights() {
+	function getCorrectLowerHeights() {
 		var heights = function() {
 			if(jQuery('#header').is(":visible")) {
 				return jQuery(window).height() - jQuery('#header').outerHeight() - jQuery('#controls').outerHeight();
@@ -188,13 +188,13 @@
 	}
 	
 	function resizeLowerContent() {
-		var heights = getTopDivHeights();
+		var heights = getCorrectLowerHeights();
 		jQuery('#school').css('height', heights);
 		jQuery('#calendar').weekCalendar('resizeCalendar', heights);
 	}
 	
 	jQuery(document).ready(function() {
-		jQuery('#school').css('height', getTopDivHeights());
+		jQuery('#school').css('height', getCorrectLowerHeights());
 		
 		//initialize calendar
 		jQuery('#calendar').weekCalendar({
@@ -210,7 +210,7 @@
 			buttons: false,
 			defaultEventLength: 0,
 			height: function(jQuerycalendar){
-				return getTopDivHeights();
+				return getCorrectLowerHeights();
 			},
 			draggable : function(calEvent, element) {	return false; },
 			resizable : function(calEvent, element) {	return false; },
@@ -337,7 +337,7 @@
 			<h1>ant<strong>planner</strong></h1>
 			<h2>A better WebSoc for UCI</h2>
 			<p>You do this: <strong>1)</strong> pick a class <strong>2)</strong> click anywhere on the row of the class you want <strong>3) </strong> it shows up  <strong>4)</strong> click the calendar events to remove <strong>5)</strong> rinse, repeat...</p>
-			<p id="temp">P.S. Please be aware this is an open preview and there are a few <a href="http://github.com/gumho/antplanner/issues/">issues</a> left. Thanks for trying it out! -ryan. Change Log <a href="http://github.com/gumho/antplanner/commits/master">here</a></p>
+			<p id="temp">P.S. Please be aware this is beta and there are some <a href="http://github.com/gumho/antplanner/issues/">issues</a>. You can view changes <a href="http://github.com/gumho/antplanner/commits/master">here</a>. Thanks for trying it out!</p>
 		</div>
 		
 		<div id="controls">
