@@ -1,0 +1,43 @@
+$def with (stats, version, logout_link)
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Admin</title>
+	<style type="text/css" media="screen">
+		body { margin: 0;}
+		#title { background-color: lime; padding: 10px;}
+		h1, h2, h3, h4, p {	margin: 10px; }
+		
+		#message {
+			background: lime;
+			margin: 10px;
+			padding: 10px;
+		}
+		
+		.panel {
+			margin: 10px;
+			border: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+	<h1 id="title">AntPlanner Admin Panel</h1>
+	<div class="panel">
+		<h2>Memcache</h2>
+		<p>There are <strong>$stats['items']</strong> items in the cache</p>
+		<form action="/admin/flush-cache" method="post">
+			<p><input type="submit" value="Flush cache"></p>
+		</form>
+	</div>
+	
+	<div class="panel">
+		<h2>WebSoc Warning</h2>
+		<p>$version</p>
+		<form action="/admin/latest-web-soc" method="post">
+			<p><input type="submit" value="Retrieve Latest WebSoc version"></p>
+		</form>
+	</div>
+</body>
+</html>

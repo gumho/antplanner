@@ -1,4 +1,5 @@
 from lib.BeautifulSoup import BeautifulSoup
+import re
 
 def strip_search(html):
 	form_html = BeautifulSoup(html).find('form', action='http://websoc.reg.uci.edu/')
@@ -19,3 +20,12 @@ def strip_schedule(html):
 		return "<p id=\"error\">No results were found.</p>"
 	else:
 		return str(schedule_html)
+
+def strip_websoc_version(html):
+	version_matches = re.findall('version.{,8}', html)
+	
+	if not version_matches:
+		return 'Couldn\'t find a match'
+	else:
+		return version_matches[0]
+	
