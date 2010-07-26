@@ -302,13 +302,13 @@
 		});
 		
 		jQuery('a#pull-tab').toggle( function() {
-				jQuery(this).html('Show More!');
+				jQuery(this).html('More');
 				var newHeight = jQuery(window).height() - jQuery('#controls').outerHeight();
 				jQuery('#header').slideUp();
 				jQuery('#school').css('height', newHeight);
 				jQuery('#calendar').weekCalendar('resizeCalendar', newHeight);
 			}, function() {
-				jQuery(this).html('More room please!');
+				jQuery(this).html('Less');
 				var newHeight = jQuery(window).height() - jQuery('#header').outerHeight() - jQuery('#controls').outerHeight();
 				jQuery('#header').slideDown();
 				jQuery('#school').css('height', newHeight);
@@ -342,7 +342,7 @@
 		
 		<div id="controls">
 			<a href="#" id="clear-calendar">Clear Calendar</a>
-			<a href="#" id="pull-tab">More room please!</a>
+			<a href="#" id="pull-tab">Less</a>
 		</div>
 		
 		<div id="calendar">
