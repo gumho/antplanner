@@ -218,6 +218,17 @@ jQuery(document).ready(function() {
 	jQuery('#school').load(function() {
 		var list = jQuery('.course-list', frames['school'].document);
 		
+		//hover over valid course
+		jQuery("tr[valign*='top']", list).hover(
+			function() {
+				jQuery(this).css({'color': 'red', 'cursor': 'pointer'});
+			},
+			function() {
+				jQuery(this).css({'color': 'black', 'cursor': 'default'});
+			}
+		);
+		
+		//click on course
 		jQuery('tr', list).click(function() {
 
 			timeString = jQuery(this).find('td').eq(SCHEDULE_TIME_INDEX).html();
@@ -276,7 +287,7 @@ jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
 		resizeLowerContent();
 	});
-			
+		
 	jQuery('a#clear-calendar').click(function() {
 		clearAllEvents();
 		return false;
