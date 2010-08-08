@@ -229,7 +229,7 @@ jQuery(document).ready(function() {
 		);
 		
 		//click on course
-		jQuery('tr', list).click(function() {
+		jQuery("tr[valign*='top']", list).click(function() {
 
 			timeString = jQuery(this).find('td').eq(SCHEDULE_TIME_INDEX).html();
 			
