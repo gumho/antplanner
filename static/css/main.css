@@ -12,7 +12,7 @@ html, body#index {
 }
 
 #temp {
-	color: #ff0000;
+	color: coral;
 }
 
 #header, #controls {
@@ -24,10 +24,19 @@ html, body#index {
 }
 	
 	#header h1 {
+		float: left;
 		font-weight: normal;
 		color: #688FE7;
 	}
-
+	
+	#account {
+		float: right;
+	}
+	
+	#header h2 {
+		clear: both;
+	}
+	
 	#header p {
 		margin-top: 5px;
 	}
