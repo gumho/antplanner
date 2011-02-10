@@ -286,26 +286,8 @@ function SOCParser() {
 	}
 };
 
-function SOC() {
-	this.initSOC = function() {
-		
-	}
-}
-
-$(document).ready(function() {
-	var courseManager = new CourseManager();
-	var socParser = new SOCParser();
-	var apCalendar = new APCalendar(courseManager);
-	var windowManager = new WindowManager();
-	
-	//set appropriate height for #school
-	windowManager.setSOCHeight();
-	
-	//initialize calendar
-	apCalendar.initCalendar();
-
-	//school on-load handler
-	$('#school').load(function() {
+function SOC() {	
+	this.initSOC = function(courseManager, apCalendar) {
 		var list = $('.course-list', frames['school'].document);
 		
 		//hover over valid course
@@ -320,6 +302,7 @@ $(document).ready(function() {
 		
 		//click on course
 		$("tr[valign*='top']", list).click(function() {
+			var socParser = new SOCParser();
 			var courseUtils = new CourseUtils();
 			
 			//parse for course information
@@ -364,6 +347,24 @@ $(document).ready(function() {
 				apCalendar.addNewCourse(calEvents[i]);
 			}
 		});
+	}
+}
+
+$(document).ready(function() {
+	var courseManager = new CourseManager();
+	var apCalendar = new APCalendar(courseManager);
+	var windowManager = new WindowManager();
+	var soc = new SOC();
+	
+	//set appropriate height for #school
+	windowManager.setSOCHeight();
+	
+	//initialize calendar
+	apCalendar.initCalendar();
+
+	//school on-load handler
+	$('#school').load(function() {
+		 soc.initSOC(courseManager, apCalendar);
 	});
 	
 	//other event handlers
