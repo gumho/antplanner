@@ -224,6 +224,10 @@ function CourseUtils() {
 
 //static-able
 function WindowManager() {
+	this.setSOCHeight = function() {
+		$('#school').css('height', this.getCorrectBottomSectionHeight());
+	}
+	
 	this.getCorrectBottomSectionHeight = function() {
 		var heights = function() {
 			if($('#header').is(":visible")) {
@@ -282,18 +286,25 @@ function SOCParser() {
 	}
 };
 
+function SOC() {
+	this.initSOC = function() {
+		
+	}
+}
+
 $(document).ready(function() {
 	var courseManager = new CourseManager();
 	var socParser = new SOCParser();
 	var apCalendar = new APCalendar(courseManager);
 	var windowManager = new WindowManager();
-
-	$('#school').css('height', windowManager.getCorrectBottomSectionHeight());
+	
+	//set appropriate height for #school
+	windowManager.setSOCHeight();
 	
 	//initialize calendar
 	apCalendar.initCalendar();
 
-	//school handlers
+	//school on-load handler
 	$('#school').load(function() {
 		var list = $('.course-list', frames['school'].document);
 		
