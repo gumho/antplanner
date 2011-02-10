@@ -115,7 +115,16 @@ function APCalendar(courseManager) {
 		
 	};
 	
+	this.addNewCourse = function(calEvent) {
+		//create the events
+		$('#calendar').weekCalendar('updateEvent', calEvent);
+		
+		//add course to the master list of courses
+		courseManager.addToBag(calEvent);
+	}
+	
 	this.clearCalendar = function() {
+		courseManager.clearCourseBag();
 		$('#calendar').weekCalendar('clear');
 	};
 	
@@ -340,12 +349,8 @@ $(document).ready(function() {
 				//we do this here because course sets must be the same color
 				calEvents[i].color = colorPairing.color;
 				calEvents[i].borderColor = colorPairing.borderColor;
-
-				//create the events
-				$('#calendar').weekCalendar('updateEvent', calEvents[i]);
 				
-				//add course to the master list of courses
-				courseManager.addToBag(calEvents[i]);
+				apCalendar.addNewCourse(calEvents[i]);
 			}
 		});
 	});
