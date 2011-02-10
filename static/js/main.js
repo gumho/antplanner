@@ -1,18 +1,8 @@
-var SCHEDULE_CODE_INDEX = 0;
-var SCHEDULE_TYPE_INDEX = 1;
-var SCHEDULE_TIME_INDEX = 5;
-
-var COURSE_BAG = [];
-
 var START_YEAR = 2010; //static calendar year
 var START_MONTH = 4; //static calendar month (May)
 var START_DAY = 3; //Monday the 3rd 
 
 var ID_COUNT = 0;
-
-function broadcastMessage(message) {
-	alert(message);
-}
 
 function genID() {
 	ID_COUNT += 1;
@@ -21,7 +11,7 @@ function genID() {
 
 
 
-Utils = function() {
+function Utils() {
 	this.getRandColorPair = function() {
 		var palette = [
 			{color: '#C4A883', borderColor: '#B08B59'},
@@ -45,31 +35,46 @@ Utils = function() {
 			{color: '#B373B3', borderColor: '#994499'},
 			{color: '#E67399', borderColor: '#DD4477'},
 			{color: '#D96666', borderColor: '#CC3333'}
-		]
+		];
 		
 		return palette[Math.floor(Math.random() * palette.length)];
-	}
-}
+	};
+};
 
 
-CourseManager = function() {
+function CourseManager() {
 	//courseBag contains calEvents
-	this.courseBag = []
+	this.courseBag = [];
 	
 	this.clearCourseBag = function() {
 		this.courseBag = [];
-	}
+	};
 	
 	this.addToBag = function(calEvent) {
 		this.courseBag.push(calEvent);
-	}
-}
-
-SOCParser = function() {
+	};
 	
-}
+	this.isDuplicateCourse = function(courseString) {
+		for(var i in this.courseBag) {
+			if(this.courseBag[i].title == courseString) {
+				return true;
+			}
+		}
+		return false;
+	};
+	
+	//constructs a legible course description (HTML-ized)
+	this.constructCourseName = function(courseString, courseType, courseCode) {
+		//removing the course name for now...it takes up too much space
+		//courseName = courseString.match(/<b>.*<\/b>/)[0].replace(/<.{1,2}>/g, '');
 
-APCalendar = function(courseManager) {
+		courseNumber = courseString.match(/&nbsp;.*<font/i)[0].replace('<font', '').replace(/&nbsp;/g, '').replace(/\s{2,}/g, ' ');
+
+		return (courseNumber + courseType + '<br/>(' + courseCode + ')');
+	};
+};
+
+function APCalendar(courseManager) {
 	this.initCalendar = function() {
 		$('#calendar').weekCalendar({
 			readonly: true,
@@ -91,8 +96,7 @@ APCalendar = function(courseManager) {
 			resizable : function(calEvent, element) {	return false; },
 			eventClick : function(calEvent, element) {		
 				//handler for removing courses		
-				var bag = courseManager.courseBag
-				
+				var bag = courseManager.courseBag				
 				for(var i in bag) {
 					if(calEvent.title == bag[i].title) {
 						var removalID = bag[i].id;
@@ -109,127 +113,108 @@ APCalendar = function(courseManager) {
 		//switch calendar view to the static date, rather than today's view
 		$('#calendar').weekCalendar('gotoWeek',  new Date(START_YEAR, START_MONTH, START_DAY));
 		
-	}
-	
-	this.clearAllEvents = function() {
-		$('#calendar').weekCalendar('clear');
-	}
-	
-	this.isDuplicateCourse = function(courseString) {
-		for(var i in COURSE_BAG) {
-			if(COURSE_BAG[i].title == courseString) {
-				return true;
-			}
-		}
-		return false;
-	}
-}
-
-function isDuplicateCourse(courseString) {
-	for(var i in COURSE_BAG) {
-		if(COURSE_BAG[i].title == courseString) {
-			return true;
-		}
-	}
-	return false;
-}
-
-//parses course string into readable format ie. INF 41 Software Reqs
-function constructCourseName(courseString, courseType, courseCode) {
-	//removing the course name for now...it takes up too much space
-	//courseName = courseString.match(/<b>.*<\/b>/)[0].replace(/<.{1,2}>/g, '');
-
-	courseNumber = courseString.match(/&nbsp;.*<font/i)[0].replace('<font', '').replace(/&nbsp;/g, '').replace(/\s{2,}/g, ' ');
-	
-	return (courseNumber + courseType + '<br/>(' + courseCode + ')');
-}
-
-//returns an array containing the days a course occurs on
-function getCourseDays(timeString) {
-	//READ: WORKAROUND
-	//Because the week calendar library does not support recurring
-	//events, a single week in time has been selected to represent 
-	//a typical week for a school quarter. See date constants above.
-	
-	var days = [];
-	days['M'] = 3;
-	days['Tu'] = 4;
-	days['W'] = 5;
-	days['Th'] = 6;
-	days['F'] = 7;
-	
-	var courseDates = [];
-	
-	if(timeString.indexOf('M') != -1) {	courseDates.push(days['M']); } 
-	if(timeString.indexOf('Tu') != -1) { courseDates.push(days['Tu']); } 
-	if(timeString.indexOf('W') != -1) {	courseDates.push(days['W']); }
-	if(timeString.indexOf('Th') != -1) { courseDates.push(days['Th']); }
-	if(timeString.indexOf('F') != -1) {	courseDates.push(days['F']); }
-	
-	return courseDates;
-}
-
-//takes course time info and converts into JS Date hour and minute
-//9:30-10:50p
-function getCourseTime(timeString) {
-	var inPM = timeString.charAt(timeString.length - 1);
-	timeString = timeString.replace(/[a-zA-Z&;]/g,'');
-	
-	var splitTimes = timeString.split('-');
-		var startTime = splitTimes[0];
-		var endTime = splitTimes[1];
-	
-	var splitStart = startTime.split(':');
-		var startHour = parseInt(splitStart[0]);
-		var startMin = parseInt(splitStart[1]);
-
-	var splitEnd = endTime.split(':');
-		var endHour = parseInt(splitEnd[0]);
-		var endMin = parseInt(splitEnd[1]);
-	
-	//if end time goes into afternoon, do magic to convert
-	//into 24 hour times
-	if(inPM == 'p') {
-		if(endHour < 12) {
-			endHour += 12;
-			
-			if(startHour >= 1 && startHour < 12) {
-				startHour += 12;
-			}
-		}
-	} 
-	
-	//alert('start: ' + startHour + ':' + startMin + ' end: ' + endHour + ':' + endMin);
-	
-	var time = {
-		"startHour": startHour,
-		"startMin": startMin,
-		"endHour": endHour,
-		"endMin": endMin
 	};
 	
-	return time;
-}
-
-//returns an array of calEvents
-function createEvents(courseName, courseDates, courseTime) {
-	var calEvents = [];
-
-	for(var i in courseDates) {
-		var e = {	
-			"id": genID(),
-			"start": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.startHour, courseTime.startMin),
-			"end": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.endHour, courseTime.endMin),
-			"title": courseName
-		};
-		
-		calEvents.push(e);
-	}
+	this.clearCalendar = function() {
+		$('#calendar').weekCalendar('clear');
+	};
 	
-	return calEvents;
-}
+	this.scrollToHour = function(startHour) {
+		$('#calendar').weekCalendar('scrollToHour', startHour);
+	};
+	
+	//returns an array of cal events
+	this.createEventArray = function(courseName, courseDates, courseTime) {
+		var calEvents = [];
 
-WindowManager = function() {
+		for(var i in courseDates) {
+			var e = {	
+				"id": genID(),
+				"start": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.startHour, courseTime.startMin),
+				"end": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.endHour, courseTime.endMin),
+				"title": courseName
+			};
+
+			calEvents.push(e);
+		}
+
+		return calEvents;
+	};
+};
+
+//static-able
+function CourseUtils() {
+	//based on time string, will return an array
+	//containing which days the course will occur
+	this.getCourseDays = function(timeString) {
+		//READ: WORKAROUND
+		//Because the week calendar library does not support recurring
+		//events, a single week in time has been selected to represent 
+		//a typical week for a school quarter. See date constants above.
+
+		var days = [];
+		days['M'] = 3;
+		days['Tu'] = 4;
+		days['W'] = 5;
+		days['Th'] = 6;
+		days['F'] = 7;
+
+		var courseDates = [];
+
+		if(timeString.indexOf('M') != -1) {	courseDates.push(days['M']); } 
+		if(timeString.indexOf('Tu') != -1) { courseDates.push(days['Tu']); } 
+		if(timeString.indexOf('W') != -1) {	courseDates.push(days['W']); }
+		if(timeString.indexOf('Th') != -1) { courseDates.push(days['Th']); }
+		if(timeString.indexOf('F') != -1) {	courseDates.push(days['F']); }
+
+		return courseDates;
+	};
+	
+	//takes course time info and converts into JS Date hour and minute
+	//9:30-10:50p
+	this.createCourseStamp = function(timeString) {
+		var inPM = timeString.charAt(timeString.length - 1);
+		timeString = timeString.replace(/[a-zA-Z&;]/g,'');
+
+		var splitTimes = timeString.split('-');
+			var startTime = splitTimes[0];
+			var endTime = splitTimes[1];
+
+		var splitStart = startTime.split(':');
+			var startHour = parseInt(splitStart[0]);
+			var startMin = parseInt(splitStart[1]);
+
+		var splitEnd = endTime.split(':');
+			var endHour = parseInt(splitEnd[0]);
+			var endMin = parseInt(splitEnd[1]);
+
+		//if end time goes into afternoon, do magic to convert
+		//into 24 hour times
+		if(inPM == 'p') {
+			if(endHour < 12) {
+				endHour += 12;
+
+				if(startHour >= 1 && startHour < 12) {
+					startHour += 12;
+				}
+			}
+		} 
+
+		//alert('start: ' + startHour + ':' + startMin + ' end: ' + endHour + ':' + endMin);
+
+		var time = {
+			"startHour": startHour,
+			"startMin": startMin,
+			"endHour": endHour,
+			"endMin": endMin
+		};
+
+		return time;
+	} ;
+};
+
+//static-able
+function WindowManager() {
 	this.getCorrectBottomSectionHeight = function() {
 		var heights = function() {
 			if($('#header').is(":visible")) {
@@ -240,20 +225,60 @@ WindowManager = function() {
 		}
 
 		return heights();
-	},
+	};
 	this.resizeBottomSectionHeight = function() {
 		var heights = this.getCorrectBottomSectionHeight();
 		$('#school').css('height', heights);
 		$('#calendar').weekCalendar('resizeCalendar', heights);
+	};
+	this.broadcastMessage = function(msg) {
+		alert(msg);
+	};
+};
+
+function SOCParser() {
+	this.SCHEDULE_CODE_INDEX = 0;
+	this.SCHEDULE_TYPE_INDEX = 1;
+	this.SCHEDULE_TIME_INDEX = 5;
+	
+	this.getTimeString = function(element) {
+		var timeString = $(element).find('td').eq(this.SCHEDULE_TIME_INDEX).html();
+
+		if(timeString == null) {
+			new WindowManager().broadcastMessage("You didn't click on a course.");
+			return false;
+		}
+		
+		if(timeString.indexOf('TBA') != -1) {
+			new WindowManager().broadcastMessage("Course time is 'TBA'");
+			return false;
+		}
+		
+		return timeString;
+	};
+	
+	this.getCourseCode = function(element) {
+		var courseCode = $(element).find('td').eq(this.SCHEDULE_CODE_INDEX).html();
+		return courseCode;
+	};
+	
+	this.getCourseType = function(element) {
+		var courseType = $(element).find('td').eq(this.SCHEDULE_TYPE_INDEX).html();
+		return courseType;
+	};
+	
+	this.getCourseString = function(element) {
+		var courseString = $(element).prevAll().find('.CourseTitle:last').html();
+		return courseString;
 	}
-}
+};
 
 $(document).ready(function() {
 	var courseManager = new CourseManager();
 	var socParser = new SOCParser();
 	var apCalendar = new APCalendar(courseManager);
 	var windowManager = new WindowManager();
-	
+
 	$('#school').css('height', windowManager.getCorrectBottomSectionHeight());
 	
 	//initialize calendar
@@ -275,38 +300,33 @@ $(document).ready(function() {
 		
 		//click on course
 		$("tr[valign*='top']", list).click(function() {
-
-			timeString = $(this).find('td').eq(SCHEDULE_TIME_INDEX).html();
-			
-			if(timeString == null) {
-				broadcastMessage("You didn't click on a course.");
-				return false;
-			};
-			
-			if(timeString.indexOf('TBA') != -1) {
-				broadcastMessage("Course time is 'TBA'");
-				return false;
-			}
+			var courseUtils = new CourseUtils();
 			
 			//parse for course information
-			var courseCode = $(this).find('td').eq(SCHEDULE_CODE_INDEX).html();
-			var courseType = $(this).find('td').eq(SCHEDULE_TYPE_INDEX).html();
-			var courseString = $(this).prevAll().find('.CourseTitle:last').html();
+			var timeString = socParser.getTimeString(this);
+			if(timeString == false) {
+				return false;
+			}
+			var courseCode = socParser.getCourseCode(this);
+			var courseType = socParser.getCourseType(this);
+			var courseString = socParser.getCourseString(this);
 			
-			var courseName = constructCourseName(courseString, courseType, courseCode);
-			if(isDuplicateCourse(courseName)) {
-				broadcastMessage("You have already added that course!");
+			var courseName = courseManager.constructCourseName(courseString, courseType, courseCode);
+			
+			if(courseManager.isDuplicateCourse(courseName)) {
+				new WindowManager().broadcastMessage("You have already added that course!");
 				return false;
 			}
 			
-			var courseTime = getCourseTime(timeString);
+			var courseTime = courseUtils.createCourseStamp(timeString);
+			
 			//scroll calendar viewport to expect newly added course events
-			$('#calendar').weekCalendar('scrollToHour', courseTime.startHour);
+			apCalendar.scrollToHour(courseTime.startHour);
 			
 			//create the array of cal events
-			var calEvents = createEvents(
+			var calEvents = apCalendar.createEventArray(
 				courseName,
-				getCourseDays(timeString), 
+				new CourseUtils().getCourseDays(timeString), 
 				courseTime
 			);
 			
@@ -316,7 +336,8 @@ $(document).ready(function() {
 			
 			//create the course events
 			for(var i in calEvents) {
-				//assign the colors
+				//assign the colors:
+				//we do this here because course sets must be the same color
 				calEvents[i].color = colorPairing.color;
 				calEvents[i].borderColor = colorPairing.borderColor;
 
@@ -336,7 +357,7 @@ $(document).ready(function() {
 		
 	$('a#clear-calendar').click(function() {
 		courseManager.clearCourseBag();
-		apCalendar.clearAllEvents();
+		apCalendar.clearCalendar();
 		return false;
 	});
 	
