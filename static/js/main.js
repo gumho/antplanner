@@ -1,15 +1,16 @@
-var START_YEAR = 2010; //static calendar year
-var START_MONTH = 4; //static calendar month (May)
-var START_DAY = 3; //Monday the 3rd 
-
-var ID_COUNT = 0;
-
-function genID() {
-	ID_COUNT += 1;
-	return ID_COUNT;
+app = {
+	'START_YEAR': 2010, //static calendar year
+	'START_MONTH': 4, //static calendar month (May)
+	'START_DAY': 3 //Monday the 3rd
 }
 
-
+session = {
+	'ID_COUNT': 0,
+	'genID': function() {
+		this.ID_COUNT = this.ID_COUNT + 1;
+		return this.ID_COUNT;
+	}
+}
 
 function Utils() {
 	this.getRandColorPair = function() {
@@ -111,7 +112,7 @@ function APCalendar(courseManager) {
 		});
 		
 		//switch calendar view to the static date, rather than today's view
-		$('#calendar').weekCalendar('gotoWeek',  new Date(START_YEAR, START_MONTH, START_DAY));
+		$('#calendar').weekCalendar('gotoWeek',  new Date(app.START_YEAR, app.START_MONTH, app.START_DAY));
 		
 	};
 	
@@ -138,9 +139,9 @@ function APCalendar(courseManager) {
 
 		for(var i in courseDates) {
 			var e = {	
-				"id": genID(),
-				"start": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.startHour, courseTime.startMin),
-				"end": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.endHour, courseTime.endMin),
+				"id": session.genID(),
+				"start": new Date(app.START_YEAR, app.START_MONTH, courseDates[i], courseTime.startHour, courseTime.startMin),
+				"end": new Date(app.START_YEAR, app.START_MONTH, courseDates[i], courseTime.endHour, courseTime.endMin),
 				"title": courseName
 			};
 
