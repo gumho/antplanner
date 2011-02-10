@@ -93,7 +93,7 @@ APCalendar = function(courseManager) {
 				//handler for removing courses		
 				var bag = courseManager.courseBag
 				
-				for(i in bag) {
+				for(var i in bag) {
 					if(calEvent.title == bag[i].title) {
 						var removalID = bag[i].id;
 						$('#calendar').weekCalendar('removeEvent', removalID);
@@ -110,14 +110,23 @@ APCalendar = function(courseManager) {
 		$('#calendar').weekCalendar('gotoWeek',  new Date(START_YEAR, START_MONTH, START_DAY));
 		
 	}
+	
 	this.clearAllEvents = function() {
 		$('#calendar').weekCalendar('clear');
-		courseManager.clearCourseBag();
+	}
+	
+	this.isDuplicateCourse = function(courseString) {
+		for(var i in COURSE_BAG) {
+			if(COURSE_BAG[i].title == courseString) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
 function isDuplicateCourse(courseString) {
-	for(i in COURSE_BAG) {
+	for(var i in COURSE_BAG) {
 		if(COURSE_BAG[i].title == courseString) {
 			return true;
 		}
@@ -206,7 +215,7 @@ function getCourseTime(timeString) {
 function createEvents(courseName, courseDates, courseTime) {
 	var calEvents = [];
 
-	for(i in courseDates) {
+	for(var i in courseDates) {
 		var e = {	
 			"id": genID(),
 			"start": new Date(START_YEAR, START_MONTH, courseDates[i], courseTime.startHour, courseTime.startMin),
@@ -306,7 +315,7 @@ $(document).ready(function() {
 			var colorPairing = utils.getRandColorPair();
 			
 			//create the course events
-			for(i in calEvents) {
+			for(var i in calEvents) {
 				//assign the colors
 				calEvents[i].color = colorPairing.color;
 				calEvents[i].borderColor = colorPairing.borderColor;
@@ -316,7 +325,6 @@ $(document).ready(function() {
 				
 				//add course to the master list of courses
 				courseManager.addToBag(calEvents[i]);
-				alert(courseManager.courseBag);
 			}
 		});
 	});
@@ -328,6 +336,7 @@ $(document).ready(function() {
 		
 	$('a#clear-calendar').click(function() {
 		courseManager.clearCourseBag();
+		apCalendar.clearAllEvents();
 		return false;
 	});
 	
