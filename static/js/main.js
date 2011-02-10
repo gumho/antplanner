@@ -84,7 +84,8 @@ APCalendar = function(courseManager) {
 			buttons: false,
 			defaultEventLength: 0,
 			height: function($calendar){
-				return getCorrectLowerHeights();
+				var windowManager = new WindowManager();
+				return windowManager.getCorrectBottomSectionHeight();
 			},
 			draggable : function(calEvent, element) {	return false; },
 			resizable : function(calEvent, element) {	return false; },
@@ -217,24 +218,6 @@ function createEvents(courseName, courseDates, courseTime) {
 	}
 	
 	return calEvents;
-}
-
-function getCorrectLowerHeights() {
-	var heights = function() {
-		if($('#header').is(":visible")) {
-			return $(window).height() - $('#header').outerHeight() - $('#controls').outerHeight();
-		} else {
-			return $(window).height() - $('#controls').outerHeight();
-		}
-	}
-	
-	return heights();
-}
-
-function resizeLowerContent() {
-	var heights = getCorrectLowerHeights();
-	$('#school').css('height', heights);
-	$('#calendar').weekCalendar('resizeCalendar', heights);
 }
 
 WindowManager = function() {
