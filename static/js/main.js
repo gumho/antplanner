@@ -19,8 +19,10 @@ function genID() {
 	return ID_COUNT;
 }
 
-Utils = {
-	'getRandColorPair': function() {
+
+
+Utils = function() {
+	this.getRandColorPair = function() {
 		var palette = [
 			{color: '#C4A883', borderColor: '#B08B59'},
 			{color: '#A7A77D', borderColor: '#898951'},
@@ -47,6 +49,19 @@ Utils = {
 		
 		return palette[Math.floor(Math.random() * palette.length)];
 	}
+}
+
+
+CourseManager = function() {
+	this.course_bag = []
+	this.doShit = function() {
+		this.course_bag = ['aoeu'];
+		alert(this.course_bag);
+	}
+}
+
+SOCParser = function() {
+	
 }
 
 function isDuplicateCourse(courseString) {
@@ -177,6 +192,8 @@ function resizeLowerContent() {
 }
 
 jQuery(document).ready(function() {
+	var courseManager = new CourseManager();
+	
 	jQuery('#school').css('height', getCorrectLowerHeights());
 	
 	//initialize calendar
@@ -268,7 +285,8 @@ jQuery(document).ready(function() {
 			);
 			
 			//generate color for the event
-			var colorPairing = Utils.getRandColorPair();
+			var utils = new Utils();
+			var colorPairing = utils.getRandColorPair();
 			
 			//create the course events
 			for(i in calEvents) {
