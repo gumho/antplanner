@@ -150,6 +150,13 @@ function APCalendar(courseManager) {
 
 		return calEvents;
 	};
+	
+	this.loadEvents = function(calEvents) {
+		$('#calendar').weekCalendar('clear');
+		for(var i in calEvents) {
+			$('#calendar').weekCalendar('updateEvent', calEvents[i]);
+		}
+	}
 };
 
 //static-able
