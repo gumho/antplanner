@@ -77,11 +77,12 @@ function CourseManager() {
 	this.getJSON = function() {
 		//remove undefined
 		var newArray = new Array();
-		  for(var i = 0; i<this.courseBag.length; i++){
-		      if (this.courseBag[i] != undefined){
-		        newArray.push(this.courseBag[i]);
-		    }
-		  }
+			for(var i = 0; i<this.courseBag.length; i++){
+				if (this.courseBag[i] != undefined){
+					newArray.push(this.courseBag[i]);
+				}
+			}
+		}
 		
 		return JSON.stringify(newArray);
 	}
