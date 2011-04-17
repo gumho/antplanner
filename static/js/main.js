@@ -5,10 +5,8 @@ app = {
 }
 
 session = {
-	'ID_COUNT': 0,
 	'genID': function() {
-		this.ID_COUNT = this.ID_COUNT + 1;
-		return this.ID_COUNT;
+		return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 	}
 }
 
@@ -77,10 +75,9 @@ function CourseManager() {
 	this.getJSON = function() {
 		//remove undefined
 		var newArray = new Array();
-			for(var i = 0; i<this.courseBag.length; i++){
-				if (this.courseBag[i] != undefined){
-					newArray.push(this.courseBag[i]);
-				}
+		for(var i = 0; i<this.courseBag.length; i++){
+			if (this.courseBag[i] != undefined){
+				newArray.push(this.courseBag[i]);
 			}
 		}
 		
