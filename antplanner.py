@@ -3,6 +3,7 @@ import urllib
 import hashlib
 
 import scraper
+import data
 from auth import *
 from admin import *
 
@@ -15,8 +16,12 @@ urls = (
     '/search', 'search',
 	'/schedules', 'schedules',
 	'/admin', 'admin',
+	'/x', 'saveSchedule',
+	'/y', 'loadSchedule',
 	'/admin/flush-cache', 'adminFlushCache',
 	'/admin/latest-web-soc', 'latestWebSoc',
+	# TODO: implement this
+	'/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'individual_page'
 )
 
 render = web.template.render('templates/')
@@ -100,6 +105,17 @@ class schedules:
 		
 		return render.schedule(schedule_page)
 
+class saveSchedule():
+	def POST(self):
+		p = web.input()
+		# TODO: error handling
+		data.save_schedule(p.username, p.caldata)
+		return '{"success":"true"}'
+
+class loadSchedule():
+	def GET(self):
+		return data.load_schedule(web.input().username)
+		
 if __name__ == "__main__":
     app = web.application(urls, globals())
     app.cgirun()

@@ -73,6 +73,10 @@ function CourseManager() {
 
 		return (courseNumber + courseType + '<br/>(' + courseCode + ')');
 	};
+	
+	this.getJSON = function() {		
+		return JSON.stringify(this.courseBag);
+	}
 };
 
 function APCalendar(courseManager) {
@@ -154,7 +158,7 @@ function APCalendar(courseManager) {
 	this.loadEvents = function(calEvents) {
 		$('#calendar').weekCalendar('clear');
 		for(var i in calEvents) {
-			$('#calendar').weekCalendar('updateEvent', calEvents[i]);
+			this.addNewCourse(calEvents[i])
 		}
 	}
 };
@@ -401,4 +405,38 @@ $(document).ready(function() {
 		}
 	);
 	
+	//TODO: refactor
+	$('a#save_button').click(function() {
+		// TODO: MEGA - TODO
+		// data validation
+		// what if no events?
+		// what if too many events?
+		// user exists?
+		// password...
+		$.ajax({
+		  url: "/x",
+		  type: 'post',
+		  data: 'username=' + $('#username_field').val() + '&caldata=' + courseManager.getJSON(),
+		  dataType: 'json',
+		  success: function(data) {
+			alert(data.success);
+		  }
+		});
+		return false;
+	});
+	
+	//TODO: refactor
+	$('a#load_button').click(function() {
+		// TODO: errors
+		$.ajax({
+		  url: "/y",
+		  type: 'get',
+		  data: 'username=' + $('#username_field').val(),
+		  dataType: 'json',
+		  success: function(data) {
+			apCalendar.loadEvents(data);
+		  }
+		});
+		return false;
+	});
 });
