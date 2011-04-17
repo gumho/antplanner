@@ -74,8 +74,16 @@ function CourseManager() {
 		return (courseNumber + courseType + '<br/>(' + courseCode + ')');
 	};
 	
-	this.getJSON = function() {		
-		return JSON.stringify(this.courseBag);
+	this.getJSON = function() {
+		//remove undefined
+		var newArray = new Array();
+		  for(var i = 0; i<this.courseBag.length; i++){
+		      if (this.courseBag[i] != undefined){
+		        newArray.push(this.courseBag[i]);
+		    }
+		  }
+		
+		return JSON.stringify(newArray);
 	}
 };
 
@@ -405,8 +413,17 @@ $(document).ready(function() {
 		}
 	);
 	
+	//toggles the save/load pop up
+	$('a#save-load').toggle(function() {
+		$(this).css('font-weight', 'bold');
+		$('#save-pop-up').css('display', 'inline');
+	}, function() {
+		$(this).css('font-weight', 'normal');
+		$('#save-pop-up').css('display', 'none');
+	});
+	
 	//TODO: refactor
-	$('a#save_button').click(function() {
+	$('a#save-button').click(function() {
 		// TODO: MEGA - TODO
 		// data validation
 		// what if no events?
@@ -426,7 +443,7 @@ $(document).ready(function() {
 	});
 	
 	//TODO: refactor
-	$('a#load_button').click(function() {
+	$('a#load-button').click(function() {
 		// TODO: errors
 		$.ajax({
 		  url: "/y",

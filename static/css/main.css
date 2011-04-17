@@ -11,45 +11,59 @@ html, body#index {
 	overflow: hidden;
 }
 
-#temp {
-	color: coral;
-}
 
-#header, #controls {
+
+#header, #controls, #pull-tab {
 	font-family: arial;
 }
 
 #header {
+	position: relative;
 	padding: 10px;
 }
 	
 	#header h1 {
-		float: left;
 		font-weight: normal;
 		color: #688FE7;
 	}
 	
-	#account {
-		float: right;
+	#header h2, #header a#help-link {
+		display: inline;
 	}
 	
-	#header h2 {
-		clear: both;
-	}
+#pull-tab {
+		z-index: 9999;
+		padding: 10px;
+		position: absolute;
+		top: 0;
+		right: 0;
+}
 	
-	#header p {
-		margin-top: 5px;
-	}
 
 #controls {
 	padding: 10px;
 	position: relative;
+	z-index: 400;
 }
-	#controls a {
-		font-size: 12px;
+	
+	#controls ul li {
+		position: relative;
+		display: inline;
+	}
+	
+	#controls ul #save-pop-up {
+		position: absolute;
+		display: none;
+		top: 24px;
+		left: 0;
+		background: #fff;
+		padding: 10px;
+		z-index: 500;
+		border: 1px solid #ccc;
 	}
 
-	#clear-calendar {
+	#controls a {
+		font-size: 12px;
 	}
 
 	#pull-tab {

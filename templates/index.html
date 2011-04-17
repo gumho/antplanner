@@ -32,17 +32,26 @@
 	<div id="wrapper">
 		<div id="header">
 			<h1>ant<strong>planner</strong></h1>
-			<h2>A better WebSoc for UCI</h2>
-			<p>
-				<input type="text" name="username" value="ryan" id="username_field">
-				<a href="#" id="save_button">Save!</a>
-				<a href="#" id="load_button">Load!</a>
-			</p>
+			<h2>A better WebSoc for UCI </h2>
+			<a href="#" id="help-link">?</a>
 		</div>
 		
+		<a href="#" id="pull-tab">Less</a>
+		
 		<div id="controls">
-			<a href="#" id="clear-calendar">Clear Calendar</a>
-			<a href="#" id="pull-tab">Less</a>
+			<ul>
+				<li><a href="#" id="clear-calendar">Clear Calendar</a></li>
+				<li>
+					<a href="#" id="save-load">Save / Load</a>
+					<ul id="save-pop-up">
+						<li>
+							<input type="text" name="username" value="Username" id="username_field">
+							<a href="#" id="load-button">Load</a>
+							<a href="#" id="save-button">Save</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
 		</div>
 		
 		<div id="calendar">
