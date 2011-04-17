@@ -83,7 +83,7 @@ function APCalendar(courseManager) {
 	this.initCalendar = function() {
 		$('#calendar').weekCalendar({
 			readonly: true,
-			timeslotsPerHour: 4,
+			timeslotsPerHour: 3,
 			useShortDayNames: true,
 			showHeaderDate: false,
 			firstDayOfWeek: 1,
