@@ -1,4 +1,8 @@
+/* 
+	MODIFICATIONS FOR ANTPLANNER:
+		- line height .wc-title 
 
+*/
 
 .wc-container {
 	font-size: 14px;	
@@ -178,6 +182,10 @@ table.wc-time-slots {
 
 .wc-container .ui-draggable .wc-time {
 	cursor: move;
+}
+
+.wc-title {
+	line-height: 15px;
 }
 
 .wc-cal-event .wc-title {
