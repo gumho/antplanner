@@ -1,4 +1,8 @@
 /*
+ * MODIFICATIONS FOR ANTPLANNER:
+ * 	- calEvents can have a 'color' and 'borderColor' key
+ *  - am & pm string removed from cal event html element header (see _formatDate method)
+ *
  * jQuery.weekCalendar v1.2.3-pre
  * http://www.redredred.com.au/
  *
@@ -1390,8 +1394,9 @@
             return ('' + date.getFullYear()).substr(2);
          },
          // Time
+		 // ANTPLANNER: am and pm replaced with empty strings
          a: function(date) {
-            return date.getHours() < 12 ? 'am' : 'pm';
+            return date.getHours() < 12 ? '' : '';
          },
          A: function(date) {
             return date.getHours() < 12 ? 'AM' : 'PM';
