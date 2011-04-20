@@ -22,7 +22,9 @@ html, body#index {
 	padding: 10px;
 }
 	
-	#header h1 {
+	#header h1 a {
+		font-size: 26px;
+		text-decoration: none;
 		font-weight: normal;
 		color: #688FE7;
 	}
