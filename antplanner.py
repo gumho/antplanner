@@ -15,9 +15,9 @@ urls = (
 	'/', 'index',
     '/search', 'search',
 	'/schedules', 'schedules',
+	'/schedule/save', 'saveSchedule',
+	'/schedule/load', 'loadSchedule',
 	'/admin', 'admin',
-	'/x', 'saveSchedule',
-	'/y', 'loadSchedule',
 	'/admin/flush-cache', 'adminFlushCache',
 	'/admin/latest-web-soc', 'latestWebSoc',
 	# TODO: implement this
@@ -28,13 +28,6 @@ render = web.template.render('templates/')
 
 class index:
 	def GET(self):
-		# user = users.get_current_user()
-		# if user:
-		# 	html = "Logged in as %s | <a href='%s'>Logout</a>" % (user.email(), users.create_logout_url('/'))
-		# else: #not logged in
-		# 	html = "<a href='%s'>Login</a>" % users.create_login_url("/")
-		# 	
-		# login_div = "<p id=\"account\">%s</p>" % html
 		return render.index()
 
 class search:
