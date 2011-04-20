@@ -452,7 +452,7 @@ $(document).ready(function() {
 		var courseJSON = courseManager.getJSON();
 		
 		$.ajax({
-		  url: "/x",
+		  url: "/schedule/save",
 		  type: 'post',
 		  data: 'username=' + username + '&caldata=' + courseJSON,
 		  dataType: 'json',
@@ -485,7 +485,7 @@ $(document).ready(function() {
 		var username = $('#username_field').val();
 		
 		$.ajax({
-		  url: "/y",
+		  url: "/schedule/load",
 		  type: 'get',
 		  data: 'username=' + username,
 		  dataType: 'json',
