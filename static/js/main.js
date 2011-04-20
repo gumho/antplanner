@@ -466,6 +466,15 @@ $(document).ready(function() {
 				windowManager.broadcastMessage("Username must be at least 5 characters.");
 				return false;
 			}
+
+			if(courseManager.courseBag.length < 1) {
+				windowManager.broadcastMessage("Your calendar is empty, Please add a course before saving!")
+				return false;
+			} else if(courseManager.courseBag.length > 36) {
+				windowManager.broadcastMessage("Your calendar contains too many courses, the limit is 36!")
+				return false;
+			}
+			
 		  },
 		  success: function(data) {
 			if(data.success == 'true') {
