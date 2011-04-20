@@ -444,18 +444,35 @@ $(document).ready(function() {
 	//TODO: refactor
 	$('a#save-button').click(function() {
 		// TODO: MEGA - TODO
-		// data validation
-		// what if no events?
 		// what if too many events?
 		// user exists?
 		// password...
+		
+		var username = $('#username_field').val();
+		var courseJSON = courseManager.getJSON();
+		
 		$.ajax({
 		  url: "/x",
 		  type: 'post',
-		  data: 'username=' + $('#username_field').val() + '&caldata=' + courseManager.getJSON(),
+		  data: 'username=' + username + '&caldata=' + courseJSON,
 		  dataType: 'json',
+		  beforeSend: function() {
+		  	//TODO: create separate function for validation
+			if(username == 'Username') {
+				windowManager.broadcastMessage("Please fill in a username.");
+				return false;
+			}
+			else if(username.length < 5) {
+				windowManager.broadcastMessage("Username must be at least 5 characters.");
+				return false;
+			}
+		  },
 		  success: function(data) {
-			alert(data.success);
+			if(data.success == 'true') {
+				windowManager.broadcastMessage("Courses successfully saved!");
+			} else {
+				windowManager.broadcastMessage("Oops...a problem occurred while saving courses. Please try again later. This exception will be reviewed by an administrator.");
+			}
 		  }
 		});
 		return false;
@@ -464,13 +481,27 @@ $(document).ready(function() {
 	//TODO: refactor
 	$('a#load-button').click(function() {
 		// TODO: errors
+		
+		var username = $('#username_field').val();
+		
 		$.ajax({
 		  url: "/y",
 		  type: 'get',
-		  data: 'username=' + $('#username_field').val(),
+		  data: 'username=' + username,
 		  dataType: 'json',
+		  beforeSend: function() {
+			if(username == 'Username') {
+				windowManager.broadcastMessage("Please fill in a username.");
+				return false;
+			}
+			else if(username.length < 5) {
+				windowManager.broadcastMessage("Username must be at least 5 characters.");
+				return false;
+			}
+		  },
 		  success: function(calEvents) {
-			bridge.loadCourses(calEvents)
+			bridge.loadCourses(calEvents);
+			windowManager.broadcastMessage("Courses successfully loaded!");
 		  }
 		});
 		return false;
