@@ -20,8 +20,6 @@ urls = (
 	'/admin', 'admin',
 	'/admin/flush-cache', 'adminFlushCache',
 	'/admin/latest-web-soc', 'latestWebSoc',
-	# TODO: implement this
-	'/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'individual_page'
 )
 
 render = web.template.render('templates/')
