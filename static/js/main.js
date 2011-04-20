@@ -508,9 +508,15 @@ $(document).ready(function() {
 				return false;
 			}
 		  },
-		  success: function(calEvents) {
-			bridge.loadCourses(calEvents);
-			windowManager.broadcastMessage("Courses successfully loaded!");
+		  success: function(data) {
+			if(data.success == 'true') {
+				var calEvents = data.calEvents
+				bridge.loadCourses(calEvents);
+				windowManager.broadcastMessage("Courses successfully loaded!");
+			} else {
+				
+			}
+
 		  }
 		});
 		return false;

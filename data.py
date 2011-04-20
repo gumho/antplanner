@@ -10,4 +10,8 @@ def save_schedule(username, caldata):
 	s.put()
 	
 def load_schedule(username):
-	return Schedule.get_by_key_name(username).caldata
+	data = Schedule.get_by_key_name(username)
+	if data:
+		return ''.join(['{"success": "true", ', '"calEvents": ', data.caldata, '}'])
+	else:
+		return '{"success":"false"}'
