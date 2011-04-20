@@ -80,13 +80,12 @@ function CourseManager() {
 				newArray.push(this.courseBag[i]);
 			}
 		}
-		
 		return JSON.stringify(newArray);
 	}
 };
 
-function APCalendar(courseManager) {
-	this.initCalendar = function() {
+function APCalendar() {
+	this.initCalendar = function(courseManager) {
 		$('#calendar').weekCalendar({
 			readonly: true,
 			timeslotsPerHour: 3,
@@ -126,16 +125,16 @@ function APCalendar(courseManager) {
 		
 	};
 	
-	this.addNewCourse = function(calEvent) {
+	this.clearAllEvents = function() {
+		$('#calendar').weekCalendar('clear');
+	}
+	
+	this.addCourse = function(calEvent) {
 		//create the events
 		$('#calendar').weekCalendar('updateEvent', calEvent);
-		
-		//add course to the master list of courses
-		courseManager.addToBag(calEvent);
 	}
 	
 	this.clearCalendar = function() {
-		courseManager.clearCourseBag();
 		$('#calendar').weekCalendar('clear');
 	};
 	
@@ -161,13 +160,35 @@ function APCalendar(courseManager) {
 		return calEvents;
 	};
 	
-	this.loadEvents = function(calEvents) {
-		$('#calendar').weekCalendar('clear');
-		for(var i in calEvents) {
-			this.addNewCourse(calEvents[i])
+};
+
+function CalendarCourseBridge(courseManager, calendar) {
+	this.addEvent = function(calEvent) {
+		courseManager.addToBag(calEvent);
+		calendar.addCourse(calEvent);
+	}
+	
+	this.clearAllEvents = function() {
+		courseManager.clearCourseBag();
+		calendar.clearCalendar();
+	}
+	
+	this.loadCourses = function(calEvents) {
+		this.clearAllEvents();
+		
+		for(i in calEvents) {
+			this.addEvent(calEvents[i]);
 		}
 	}
-};
+	
+	this.getCourseManager = function() {
+		return courseManager;
+	}
+	
+	this.getCalendar = function() {
+		return calendar;
+	}
+}
 
 //static-able
 function CourseUtils() {
@@ -305,7 +326,7 @@ function SOCParser() {
 };
 
 function SOC() {	
-	this.initSOC = function(courseManager, apCalendar) {
+	this.initSOC = function(bridge) {
 		var list = $('.course-list', frames['school'].document);
 		
 		//hover over valid course
@@ -332,9 +353,9 @@ function SOC() {
 			var courseType = socParser.getCourseType(this);
 			var courseString = socParser.getCourseString(this);
 			
-			var courseName = courseManager.constructCourseName(courseString, courseType, courseCode);
+			var courseName = bridge.getCourseManager().constructCourseName(courseString, courseType, courseCode);
 			
-			if(courseManager.isDuplicateCourse(courseName)) {
+			if(bridge.getCourseManager().isDuplicateCourse(courseName)) {
 				new WindowManager().broadcastMessage("You have already added that course!");
 				return false;
 			}
@@ -342,10 +363,10 @@ function SOC() {
 			var courseTime = courseUtils.createCourseStamp(timeString);
 			
 			//scroll calendar viewport to expect newly added course events
-			apCalendar.scrollToHour(courseTime.startHour);
+			bridge.getCalendar().scrollToHour(courseTime.startHour);
 			
 			//create the array of cal events
-			var calEvents = apCalendar.createEventArray(
+			var calEvents = bridge.getCalendar().createEventArray(
 				courseName,
 				new CourseUtils().getCourseDays(timeString), 
 				courseTime
@@ -362,7 +383,7 @@ function SOC() {
 				calEvents[i].color = colorPairing.color;
 				calEvents[i].borderColor = colorPairing.borderColor;
 				
-				apCalendar.addNewCourse(calEvents[i]);
+				bridge.addEvent(calEvents[i]);
 			}
 		});
 	}
@@ -370,7 +391,8 @@ function SOC() {
 
 $(document).ready(function() {
 	var courseManager = new CourseManager();
-	var apCalendar = new APCalendar(courseManager);
+	var apCalendar = new APCalendar();
+	var bridge = new CalendarCourseBridge(courseManager, apCalendar);
 	var windowManager = new WindowManager();
 	var soc = new SOC();
 	
@@ -378,11 +400,11 @@ $(document).ready(function() {
 	windowManager.setSOCHeight();
 	
 	//initialize calendar
-	apCalendar.initCalendar();
+	apCalendar.initCalendar(courseManager);
 
 	//school on-load handler
 	$('#school').load(function() {
-		 soc.initSOC(courseManager, apCalendar);
+		 soc.initSOC(bridge);
 	});
 	
 	//other event handlers
@@ -391,8 +413,7 @@ $(document).ready(function() {
 	});
 		
 	$('a#clear-calendar').click(function() {
-		courseManager.clearCourseBag();
-		apCalendar.clearCalendar();
+		bridge.clearAllEvents();
 		return false;
 	});
 	
@@ -448,8 +469,8 @@ $(document).ready(function() {
 		  type: 'get',
 		  data: 'username=' + $('#username_field').val(),
 		  dataType: 'json',
-		  success: function(data) {
-			apCalendar.loadEvents(data);
+		  success: function(calEvents) {
+			bridge.loadCourses(calEvents)
 		  }
 		});
 		return false;
