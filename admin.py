@@ -2,6 +2,9 @@ import web
 
 import scraper
 from auth import requireAdmin
+from data import Schedule
+from google.appengine.ext import db
+from datetime import date, timedelta
 
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
@@ -27,3 +30,9 @@ class latestWebSoc:
 			memcache.add('websoc-version', 'websoc down?', 30)
 
 		raise web.seeother('/admin')
+
+class deleteOldSchedules:
+	@requireAdmin
+	def GET(self):
+		DELETE_DATE_THRESHOLD = date.today() - timedelta(1 * 30) #approx. 1 month
+		db.delete(Schedule.gql("WHERE modified <= :1", DELETE_DATE_THRESHOLD))

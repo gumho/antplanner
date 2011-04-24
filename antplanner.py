@@ -20,6 +20,7 @@ urls = (
 	'/admin', 'admin',
 	'/admin/flush-cache', 'adminFlushCache',
 	'/admin/latest-web-soc', 'latestWebSoc',
+	'/admin/delete-old-schedules', 'deleteOldSchedules'
 )
 
 render = web.template.render('templates/')

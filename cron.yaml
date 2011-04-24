@@ -1,0 +1,4 @@
+cron:
+- description: delete old schedules
+  url: /admin/delete-old-schedules
+  schedule: every day at 01:00
