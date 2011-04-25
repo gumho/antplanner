@@ -4,7 +4,6 @@ import hashlib
 
 import scraper
 import data
-from auth import *
 from admin import *
 
 from google.appengine.api import urlfetch 

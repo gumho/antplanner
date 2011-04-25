@@ -1,14 +1,40 @@
 import web
 
 import scraper
-from auth import requireAdmin
 from data import Schedule
-from google.appengine.ext import db
 from datetime import date, timedelta
 
+from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
+from google.appengine.api import users
 
+render = web.template.render('templates/')
+
+def requireAdmin(f):
+	def wrapper(*args, **kw):
+		if users.get_current_user():
+			if users.is_current_user_admin():
+				return f(*args, **kw)
+			else:
+				web.seeother(users.create_login_url('/admin'))
+		else:
+			return web.seeother(users.create_login_url('/admin'))
+	
+	return wrapper
+
+class admin:
+	@requireAdmin
+	def GET(self):		
+		stats = memcache.get_stats()
+		version = memcache.get('websoc-version')
+		if version is None:
+			version = ''
+
+		logout_link = users.create_logout_url('/admin')
+		
+		return render.admin(stats, version, logout_link)
+		
 class adminFlushCache:
 	@requireAdmin
 	def POST(self):		
