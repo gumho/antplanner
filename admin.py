@@ -1,7 +1,7 @@
 import web
 
 import scraper
-from data import Schedule
+from schedule import Schedule
 from datetime import date, timedelta
 
 from google.appengine.ext import db
