@@ -25,6 +25,7 @@ $def with (stats, version, logout_link)
 <body>
 	<h1 id="title">AntPlanner Admin Panel</h1>
 	<p><a href="$logout_link">logout</a></p>
+	
 	<div class="panel">
 		<h2>Memcache</h2>
 		<p>There are <strong>$stats['items']</strong> items in the cache</p>
@@ -35,10 +36,21 @@ $def with (stats, version, logout_link)
 	
 	<div class="panel">
 		<h2>WebSoc Warning</h2>
-		<p>$version</p>
+		<p>Antplanner current supported version: 3.2 (as of Apr 24, 2011)</p>
+		<p>Current WebSoc version: $version</p>
 		<form action="/admin/latest-web-soc" method="post">
 			<p><input type="submit" value="Retrieve Latest WebSoc version"></p>
 		</form>
 	</div>
+	
+	<div class="panel">
+		<h2>Delete all schedules</h2>
+		<p>
+			<form action="/admin/delete-old-schedules" method="get">
+				<p><input type="submit" value="Delete 'em!"></p>
+			</form>		</p>
+	</div>
+	
+	
 </body>
 </html>
