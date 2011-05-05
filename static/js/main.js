@@ -86,6 +86,10 @@ function CourseManager() {
 
 function APCalendar() {
 	this.initCalendar = function(courseManager) {
+		
+		//keeps track of # of'remove course' clicks
+		var numRemoveClicks = 0;
+		
 		$('#calendar').weekCalendar({
 			readonly: true,
 			timeslotsPerHour: 3,
@@ -114,9 +118,21 @@ function APCalendar() {
 						delete bag[i];
 					}
 				}
-				//
-				//TODO: clean up undefined after 'deletes'
-				//
+				
+				//Every 7 'remove' clicks, we get rid of all the null elements
+				//in the courseBag. This is to keep the array growing and slowing 
+				//down course adds when checking for duplicate courses. 
+				if(numRemoveClicks % 7 == 0) {
+					var nonNullBag = new Array();
+					for(var i in bag) {
+						if (bag[i] != null) {
+							nonNullBag.push(bag[i]);
+						}
+					}
+					courseManager.courseBag = nonNullBag;
+				}
+				
+				numRemoveClicks += 1;
 			}
 		});
 		
