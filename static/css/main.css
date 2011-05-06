@@ -29,8 +29,12 @@ html, body#index {
 		color: #688FE7;
 	}
 	
-	#header h2, #header a#help-link {
+	#header h2, a#help-link, a#news-link  {
 		display: inline;
+	}
+	
+	a#news-link {
+		color: coral;
 	}
 	
 #pull-tab {
@@ -53,7 +57,7 @@ html, body#index {
 		display: inline;
 	}
 	
-	#controls ul #save-pop-up {
+	ul#save-pop-up {
 		position: absolute;
 		display: none;
 		top: 24px;
@@ -62,6 +66,14 @@ html, body#index {
 		padding: 10px;
 		z-index: 500;
 		border: 1px solid #ccc;
+		width: 150px;
+	}
+		ul#save-pop-up li {
+			width: 100px;
+		}
+	
+	#controls ul #save-pop-up p {
+		color: #ccc;
 	}
 
 	#controls a {
