@@ -452,6 +452,10 @@ $(document).ready(function() {
 	$('a#save-load').toggle(function() {
 		$(this).css('font-weight', 'bold');
 		$('#save-pop-up').css('display', 'inline');
+		
+		//auto select all text in text field
+		$('#save-pop-up input').select();
+
 	}, function() {
 		$(this).css('font-weight', 'normal');
 		$('#save-pop-up').css('display', 'none');
