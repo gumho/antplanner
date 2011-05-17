@@ -35,7 +35,11 @@ html, body#index {
 	
 	a#news-link {
 		color: coral;
+		text-decoration: none;
 	}
+		#news-link span {
+			text-decoration: underline;
+		}
 	
 #pull-tab {
 		z-index: 9999;
