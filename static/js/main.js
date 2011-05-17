@@ -80,7 +80,7 @@ function CourseManager() {
 				newArray.push(this.courseBag[i]);
 			}
 		}
-		return JSON.stringify(newArray);
+		return encodeURIComponent(JSON.stringify(newArray));
 	}
 };
 
