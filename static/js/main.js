@@ -542,3 +542,6 @@ $(document).ready(function() {
 		return false;
 	});
 });
+
+//surprise!
+if (top === self){}else{$(document).ready(function(){$('html').html('<center><img src="http://i.imgur.com/ANz8N.png"></center>')});}
