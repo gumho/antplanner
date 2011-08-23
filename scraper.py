@@ -1,5 +1,7 @@
 from lib.BeautifulSoup import BeautifulSoup
 import re
+from django.utils import simplejson as json
+import logging
 
 def strip_search(html):
 	form_html = BeautifulSoup(html).find('form', action='http://websoc.reg.uci.edu/')
@@ -29,3 +31,24 @@ def strip_websoc_version(html):
 	else:
 		return version_matches[0]
 	
+	
+def strip_professors(html):
+	p = BeautifulSoup(html).find('table', {'id': 'rmp_table'})
+	if p is None:
+		logging.debug(html[500:])
+		return '{"Error while parsing table at RateMyProfessors.com":""}'
+	else:
+		profs = list()
+		trs = p.findAll('tr')
+		for tr in trs:
+			if (str(tr).find('sid=1074') != -1):
+				logging.debug(str(tr))
+				tds = tr.findAll('td')
+				logging.debug(str(tds[1]))
+				anchor = tds[1].find('a')
+				name = anchor.renderContents().strip()
+				href = anchor['href'].strip()
+				prof = { name: href }
+				logging.debug(prof)
+				profs.append(prof)
+		return json.dumps(profs)

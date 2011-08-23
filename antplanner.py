@@ -10,6 +10,8 @@ from google.appengine.api import urlfetch
 from google.appengine.api import memcache
 from google.appengine.api import users
 
+import logging
+
 urls = (
 	'/', 'index',
     '/search', 'search',
@@ -19,7 +21,8 @@ urls = (
 	'/admin', 'admin',
 	'/admin/flush-cache', 'adminFlushCache',
 	'/admin/latest-web-soc', 'latestWebSoc',
-	'/admin/delete-old-schedules', 'deleteOldSchedules'
+	'/admin/delete-old-schedules', 'deleteOldSchedules',
+	'/prof', 'getProf'
 )
 
 render = web.template.render('templates/')
@@ -106,6 +109,29 @@ class saveSchedule():
 class loadSchedule():
 	def GET(self):
 		return schedule.load_schedule(web.input().username)
+		
+class getProf():
+	def GET(self):
+		p = web.input()
+		logging.debug(p)
+		#data = memcache.get("PROF")
+		if p is None or p.name is None:
+			return '{"Empty Request": ""}'
+		#if data is None:
+		try:
+			name = urllib.quote_plus(p.name)
+			logging.debug('Escaped name: ' + name)
+			raw_page = urlfetch.fetch("http://www.ratemyprofessors.com/SearchProfs.jsp?letter=" + urllib.quote_plus(p.name),
+										method=urlfetch.GET,
+										deadline=10)
+			data = scraper.strip_professors(raw_page.content)
+			#memcache.add("PROF", data, 60 * 60)
+		except urlfetch.DownloadError:
+			data = '{"RateMyProfessors.com request exceeded 10 seconds": ""}'
+		except urlfetch.Error:
+			data = '{"RateMyProfessors.com is not available at the moment": ""}'
+		
+		return data
 		
 if __name__ == "__main__":
     app = web.application(urls, globals())
