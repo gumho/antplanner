@@ -111,3 +111,14 @@ iframe#school {
 	width: 50%;
 	float: left;
 }
+
+/* professor modal popup */
+#prof-select {
+	font-size: 14px;
+	border-collapse: collapse;
+	margin:10px;
+}
+#prof-select td, #prof-select th {
+	border: 1px solid gray;
+	padding: 5px;
+}

@@ -357,7 +357,7 @@ function SOC() {
 			}
 		);
 		
-		//click on course
+		//click on course (this should be placed on all tr's except instructor)
 		$("tr[valign*='top']", list).click(function() {
 			var socParser = new SOCParser();
 			var courseUtils = new CourseUtils();
@@ -407,21 +407,30 @@ function SOC() {
 		
 		// click on instructor
 		$("tr[valign*='top'] td:nth-child(5)", list).click(function() {
-			//var socParser = new SOCParser();
 			var prof = $(this).html();
 			showProfessors(prof);
 		});
+		
+		// hover
+		$("tr[valign*='top'] td:nth-child(5)", list).hover(
+			function() {
+				$(this).css({'color': 'green', 'cursor': 'pointer'});
+			},
+			function() {
+				$(this).css({'color': 'inherit', 'cursor': 'inherit'});
+			}
+		);
 	}
 }
 
 function showProfessors(name) {
 	// name is the query string for professors
-	name = prof.split(',')[0]; // get first word only (aka last name)
-	if (name == '' || name.toUpperCase() == 'STAFF')
+	lastName = name.split(",")[0]; // get first word only (aka last name)
+	if (lastName == '' || lastName.toUpperCase() == 'STAFF')
 		return;
 	
 	var profTable = $('#prof-select');
-	profTable.html('<tr><td>Please wait while we load RateMyProfessors.com</td></tr>');
+	profTable.html('<tr><td style="border:0">Please wait while we load RateMyProfessors.com</td></tr>');
 	profTable.dialog('open');
 	
 	$.ajax({
@@ -436,21 +445,19 @@ function showProfessors(name) {
 			}
 		  },
 		  success: function(data) {
-			console.log(data);
-			
-			var trs = '<tr><td>Professor</td><td>Department</td><td># Ratings</td><td>Quality</td><td>Easiness</td><td>Hot</td></tr>';
+			var trs = '<tr><th>Professor</th><th>Department</th><th>#&nbsp;Ratings</th><th>Quality</th><th>Easiness</th><th>Hot</th></tr>';
 			if (data.length > 0) {
 				for (var i=0; i<data.length; i++) {
-					var tr = data[i];
-					trs += '<tr>';
-					for (a in tr)
-						trs += '<td><a href="http://www.ratemyprofessors.com/'+tr[a]+'" target="_blank">'+a+'</a></td>';
-					trs += '</tr>'
+					var p = data[i];
+					trs += '<tr><td><a href="'+p.href+'" target="_blank">'+p.name+'</a></td><td>'+p.dept+'</td><td>'+p.ratings+'</td><td>'+p.quality+'</td><td>'+p.easiness+'</td><td>'+p.hot+'</td></tr>';
 				}
 			} else {
-				trs = '<tr><td>No reviews found for professor '+name+'</td></tr>';
+				trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
 			}
 			profTable.html(trs);
+		  },
+		  error: function(jqXHR, textStatus, errorThrown) {
+			profTable.html('<tr><td>An error occured:</td></tr><tr><td>'+textStatus+'</td><td>'+errorThrown+'</td></tr>');
 		  },
 		  complete: function(jqXHR, textStatus) {
 			$('body').css({'cursor': 'auto'});
@@ -597,12 +604,12 @@ $(document).ready(function() {
 	
 	$('#prof-select').dialog({	autoOpen: false,
 								modal: true,
-								title: 'Select a Professor',
-								width: 235,
+								title: 'RateMyProfessors.com',
+								width: 600,
 								resizable: false,
 								closeOnEscape: true,
 								draggable: false
-							}).css('font-size', '14px');
+							});
 	
 });
 

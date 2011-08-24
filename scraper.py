@@ -32,23 +32,50 @@ def strip_websoc_version(html):
 		return version_matches[0]
 	
 	
-def strip_professors(html):
-	p = BeautifulSoup(html).find('table', {'id': 'rmp_table'})
-	if p is None:
+def strip_professors(html, name):
+	table = BeautifulSoup(html).find('div', {'id': 'ratingTable'})
+	if table is None:
 		logging.debug(html[500:])
 		return '{"Error while parsing table at RateMyProfessors.com":""}'
 	else:
 		profs = list()
-		trs = p.findAll('tr')
-		for tr in trs:
-			if (str(tr).find('sid=1074') != -1):
-				logging.debug(str(tr))
-				tds = tr.findAll('td')
-				logging.debug(str(tds[1]))
-				anchor = tds[1].find('a')
-				name = anchor.renderContents().strip()
-				href = anchor['href'].strip()
-				prof = { name: href }
-				logging.debug(prof)
+		name = name.upper()
+		split = name.split(',');
+		qLastName = split[0].strip()
+		qFirstName = split[1].strip()
+		if (qFirstName == None or qFirstName == ''):
+			qFirstName = '!'
+		rows = table.findAll('div', {'class': re.compile(r".*\bentry\b.*")})
+		for row in rows:
+			divName = row.find('div', {'class': 'profName'})
+			anchor = divName.find('a')
+			profName = unicode(anchor.renderContents().strip(), 'utf-8', 'ignore').upper()
+			split = profName.split(',');
+			lastName = split[0].strip()
+			firstName = split[1].strip()
+			if (firstName == None or firstName == ''):
+				firstName = '!'
+			#logging.debug(qLastName + ' =? ' + lastName + ' && ' + qFirstName + ' =? ' + firstName)
+			if lastName == qLastName and firstName[0] == qFirstName[0]:
+				href = 'http://www.ratemyprofessors.com/' + anchor['href'].strip()
+				profDept = row.find('div', {'class': 'profDept'}).renderContents().strip()
+				profRatings = row.find('div', {'class': 'profRatings'}).renderContents().strip()
+				profQuality = row.find('div', {'class': 'profAvg'}).renderContents().strip()
+				profEasiness = row.find('div', {'class': 'profEasy'}).renderContents().strip()
+				profHot = row.find('div', {'class': re.compile(r".*\bprofHot\b.*")}).renderContents().strip()
+				if profHot == 'Hot':
+					profHot = '&#x2713;'
+				else:
+					profHot = '&nbsp;'
+				
+				prof = {'name': profName,
+						'href': href,
+						'dept': profDept,
+						'ratings': profRatings,
+						'quality': profQuality,
+						'easiness': profEasiness,
+						'hot': profHot
+						}
+				#logging.debug(prof)
 				profs.append(prof)
 		return json.dumps(profs)

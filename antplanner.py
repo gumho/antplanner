@@ -113,18 +113,18 @@ class loadSchedule():
 class getProf():
 	def GET(self):
 		p = web.input()
-		logging.debug(p)
+		#logging.debug(p)
 		#data = memcache.get("PROF")
 		if p is None or p.name is None:
 			return '{"Empty Request": ""}'
 		#if data is None:
 		try:
-			name = urllib.quote_plus(p.name)
-			logging.debug('Escaped name: ' + name)
-			raw_page = urlfetch.fetch("http://www.ratemyprofessors.com/SearchProfs.jsp?letter=" + urllib.quote_plus(p.name),
+			q = urllib.quote_plus(p.name[0])
+			#logging.debug('Query param: ' + q)
+			raw_page = urlfetch.fetch("http://www.ratemyprofessors.com/SelectTeacher.jsp?the_dept=All&sid=1074&orderby=TLName&letter=" + q,
 										method=urlfetch.GET,
 										deadline=10)
-			data = scraper.strip_professors(raw_page.content)
+			data = scraper.strip_professors(raw_page.content, unicode(p.name))
 			#memcache.add("PROF", data, 60 * 60)
 		except urlfetch.DownloadError:
 			data = '{"RateMyProfessors.com request exceeded 10 seconds": ""}'
