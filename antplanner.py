@@ -116,7 +116,7 @@ class getProf():
 		#logging.debug(p)
 		#data = memcache.get("PROF")
 		if p is None or p.name is None:
-			return '{"Empty Request": ""}'
+			return get_rmp_error('Empty Request','The professor must have a last name in order to find ratings.')
 		#if data is None:
 		try:
 			q = urllib.quote_plus(p.name[0])
@@ -127,9 +127,9 @@ class getProf():
 			data = scraper.strip_professors(raw_page.content, unicode(p.name))
 			#memcache.add("PROF", data, 60 * 60)
 		except urlfetch.DownloadError:
-			data = '{"RateMyProfessors.com request exceeded 10 seconds": ""}'
+			data = get_rmp_error('urlfetch.DownloadError','RateMyProfessors.com request exceeded 10 seconds')
 		except urlfetch.Error:
-			data = '{"RateMyProfessors.com is not available at the moment": ""}'
+			data = get_rmp_error('urlfetch.Error','RateMyProfessors.com is not available at the moment')
 		
 		return data
 		

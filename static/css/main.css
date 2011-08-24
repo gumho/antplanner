@@ -122,3 +122,8 @@ iframe#school {
 	border: 1px solid gray;
 	padding: 5px;
 }
+
+#prof-select a {
+	color: #688FE7;
+	font-size: 14px;
+}

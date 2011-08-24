@@ -350,7 +350,7 @@ function SOC() {
 		//hover over valid course
 		$("tr[valign*='top']", list).hover(
 			function() {
-				$(this).css({'color': 'blue', 'cursor': 'pointer'});
+				$(this).css({'color': 'red', 'cursor': 'pointer'});
 			},
 			function() {
 				$(this).css({'color': 'black', 'cursor': 'default'});
@@ -411,10 +411,10 @@ function SOC() {
 			showProfessors(prof);
 		});
 		
-		// hover
+		// instructor hover
 		$("tr[valign*='top'] td:nth-child(5)", list).hover(
 			function() {
-				$(this).css({'color': 'green', 'cursor': 'pointer'});
+				$(this).css({'color': 'blue', 'cursor': 'pointer'});
 			},
 			function() {
 				$(this).css({'color': 'inherit', 'cursor': 'inherit'});
@@ -423,46 +423,48 @@ function SOC() {
 	}
 }
 
-function showProfessors(name) {
+function showProfessors(nameString) {
 	// name is the query string for professors
-	lastName = name.split(",")[0]; // get first word only (aka last name)
-	if (lastName == '' || lastName.toUpperCase() == 'STAFF')
-		return;
-	
 	var profTable = $('#prof-select');
 	profTable.html('<tr><td style="border:0">Please wait while we load RateMyProfessors.com</td></tr>');
 	profTable.dialog('open');
 	
-	$.ajax({
-		  url: "/prof",
-		  type: 'get',
-		  data: 'name=' + name,
-		  dataType: 'json',
-		  beforeSend: function() {
-			$('body').css({'cursor': 'wait'});
-			if(!name) {
-				return false;
-			}
-		  },
-		  success: function(data) {
-			var trs = '<tr><th>Professor</th><th>Department</th><th>#&nbsp;Ratings</th><th>Quality</th><th>Easiness</th><th>Hot</th></tr>';
-			if (data.length > 0) {
-				for (var i=0; i<data.length; i++) {
-					var p = data[i];
-					trs += '<tr><td><a href="'+p.href+'" target="_blank">'+p.name+'</a></td><td>'+p.dept+'</td><td>'+p.ratings+'</td><td>'+p.quality+'</td><td>'+p.easiness+'</td><td>'+p.hot+'</td></tr>';
-				}
-			} else {
-				trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
-			}
+	var trs = '<tr><th>Professor</th><th>Department</th><th>#&nbsp;Ratings</th><th>Quality</th><th>Easiness</th><th>Hot</th></tr>';
+	nameList = nameString.split('<br>');
+	for (var n=0; n<nameList.length; n++) {
+		name = nameList[n].toUpperCase();
+		if (name == '' || name == 'STAFF') {
+			trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
 			profTable.html(trs);
-		  },
-		  error: function(jqXHR, textStatus, errorThrown) {
-			profTable.html('<tr><td>An error occured:</td></tr><tr><td>'+textStatus+'</td><td>'+errorThrown+'</td></tr>');
-		  },
-		  complete: function(jqXHR, textStatus) {
-			$('body').css({'cursor': 'auto'});
-		  }
-		});
+		} else {
+			$.ajax({
+				url: "/prof",
+				type: 'get',
+				data: 'name=' + name,
+				dataType: 'json',
+				beforeSend: function() {
+					$('body').css({'cursor': 'wait'});
+				},
+				success: function(data) {
+					if (data.length > 0) {
+						for (var i=0; i<data.length; i++) {
+							var p = data[i];
+							trs += '<tr><td><a href="'+p.href+'" target="_blank">'+p.name+'</a></td><td>'+p.dept+'</td><td>'+p.ratings+'</td><td>'+p.quality+'</td><td>'+p.easiness+'</td><td>'+p.hot+'</td></tr>';
+						}
+					} else {
+						trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
+					}
+					profTable.html(trs);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					profTable.html('<tr><td>An error occured:</td></tr><tr><td>'+textStatus+'</td><td>'+errorThrown+'</td></tr>');
+				},
+				complete: function(jqXHR, textStatus) {
+					$('body').css({'cursor': 'auto'});
+				}
+			});
+		}
+	}
 }
 
 $(document).ready(function() {

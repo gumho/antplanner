@@ -31,15 +31,26 @@ def strip_websoc_version(html):
 	else:
 		return version_matches[0]
 	
+def get_rmp_error(title, message):
+	data = {
+		'name': title,
+		'href': 'javascript:void(0);',
+		'dept': message,
+		'ratings': '0',
+		'quality': '0',
+		'easiness': '0',
+		'hot': '&#xd8;'
+	}
+	return json.dumps(data)
 	
 def strip_professors(html, name):
 	table = BeautifulSoup(html).find('div', {'id': 'ratingTable'})
 	if table is None:
 		logging.debug(html[500:])
-		return '{"Error while parsing table at RateMyProfessors.com":""}'
+		return get_rmp_error('Parse Error','Could not find "ratingTable" at RateMyProfessors.com')
 	else:
 		profs = list()
-		name = name.upper()
+		#name = name.upper()
 		split = name.split(',');
 		qLastName = split[0].strip()
 		qFirstName = split[1].strip()
@@ -68,14 +79,17 @@ def strip_professors(html, name):
 				else:
 					profHot = '&nbsp;'
 				
-				prof = {'name': profName,
-						'href': href,
-						'dept': profDept,
-						'ratings': profRatings,
-						'quality': profQuality,
-						'easiness': profEasiness,
-						'hot': profHot
-						}
+				prof = {
+					'name': profName,
+					'href': href,
+					'dept': profDept,
+					'ratings': profRatings,
+					'quality': profQuality,
+					'easiness': profEasiness,
+					'hot': profHot
+				}
 				#logging.debug(prof)
 				profs.append(prof)
 		return json.dumps(profs)
+		
+
