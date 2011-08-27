@@ -307,6 +307,7 @@ function WindowManager() {
 function SOCParser() {
 	this.SCHEDULE_CODE_INDEX = 0;
 	this.SCHEDULE_TYPE_INDEX = 1;
+	this.SCHEDULE_PROF_INDEX = 4;
 	this.SCHEDULE_TIME_INDEX = 5;
 	
 	this.getTimeString = function(element) {
@@ -326,22 +327,23 @@ function SOCParser() {
 	};
 	
 	this.getCourseCode = function(element) {
-		var courseCode = $(element).find('td').eq(this.SCHEDULE_CODE_INDEX).html();
-		return courseCode;
+		return $(element).find('td').eq(this.SCHEDULE_CODE_INDEX).html();
 	};
 	
 	this.getCourseType = function(element) {
-		var courseType = $(element).find('td').eq(this.SCHEDULE_TYPE_INDEX).html();
-		return courseType;
+		return $(element).find('td').eq(this.SCHEDULE_TYPE_INDEX).html();
 	};
 	
+	this.getCourseProf = function(element) {
+		return $(element).find('td').eq(this.SCHEDULE_PROF_INDEX).html();
+	}
+	
 	this.getCourseString = function(element) {
-		var courseString = $(element).prevAll().find('.CourseTitle:last').html();
-		return courseString;
+		return $(element).prevAll().find('.CourseTitle:last').html();
 	}
 };
 
-function SOC() {	
+function SOC() {
 	this.initSOC = function(bridge) {
 		var list = $('.course-list', frames['school'].document);
 		
@@ -355,7 +357,7 @@ function SOC() {
 			}
 		);
 		
-		//click on course
+		//click on course (this should be placed on all tr's except instructor)
 		$("tr[valign*='top']", list).click(function() {
 			var socParser = new SOCParser();
 			var courseUtils = new CourseUtils();
@@ -402,6 +404,66 @@ function SOC() {
 				bridge.addEvent(calEvents[i]);
 			}
 		});
+		
+		// click on instructor
+		$("tr[valign*='top'] td:nth-child(5)", list).click(function() {
+			var prof = $(this).html();
+			showProfessors(prof);
+		});
+		
+		// instructor hover
+		$("tr[valign*='top'] td:nth-child(5)", list).hover(
+			function() {
+				$(this).css({'color': 'blue', 'cursor': 'pointer'});
+			},
+			function() {
+				$(this).css({'color': 'inherit', 'cursor': 'inherit'});
+			}
+		);
+	}
+}
+
+function showProfessors(nameString) {
+	// name is the query string for professors
+	var profTable = $('#prof-select');
+	profTable.html('<tr><td style="border:0">Please wait while we load RateMyProfessors.com</td></tr>');
+	profTable.dialog('open');
+	
+	var trs = '<tr><th>Professor</th><th>Department</th><th>#&nbsp;Ratings</th><th>Quality</th><th>Easiness</th><th>Hot</th></tr>';
+	nameList = nameString.split('<br>');
+	for (var n=0; n<nameList.length; n++) {
+		name = nameList[n].toUpperCase();
+		if (name == '' || name == 'STAFF') {
+			trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
+			profTable.html(trs);
+		} else {
+			$.ajax({
+				url: "/prof",
+				type: 'get',
+				data: 'name=' + name,
+				dataType: 'json',
+				beforeSend: function() {
+					$('body').css({'cursor': 'wait'});
+				},
+				success: function(data) {
+					if (data.length > 0) {
+						for (var i=0; i<data.length; i++) {
+							var p = data[i];
+							trs += '<tr><td><a href="'+p.href+'" target="_blank">'+p.name+'</a></td><td>'+p.dept+'</td><td>'+p.ratings+'</td><td>'+p.quality+'</td><td>'+p.easiness+'</td><td>'+p.hot+'</td></tr>';
+						}
+					} else {
+						trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
+					}
+					profTable.html(trs);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					profTable.html('<tr><td>An error occured:</td></tr><tr><td>'+textStatus+'</td><td>'+errorThrown+'</td></tr>');
+				},
+				complete: function(jqXHR, textStatus) {
+					$('body').css({'cursor': 'auto'});
+				}
+			});
+		}
 	}
 }
 
@@ -545,6 +607,16 @@ $(document).ready(function() {
 		});
 		return false;
 	});
+	
+	$('#prof-select').dialog({	autoOpen: false,
+								modal: true,
+								title: 'RateMyProfessors.com',
+								width: 600,
+								resizable: false,
+								closeOnEscape: true,
+								draggable: false
+							});
+	
 });
 
 //surprise!
