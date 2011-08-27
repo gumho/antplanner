@@ -45,7 +45,7 @@ class latestWebSoc:
 class deleteOldSchedules:
 	def GET(self):
 		try:
-			DELETE_DATE_THRESHOLD = date.today() - timedelta(3 * 30) #approx. 1 month
+			DELETE_DATE_THRESHOLD = date.today() - timedelta(6 * 30) #approx. 6 months
 			db.delete(Schedule.gql("WHERE modified <= :1", DELETE_DATE_THRESHOLD))
 			return 'Successfully deleted all schedules before %s' % DELETE_DATE_THRESHOLD
 		except:
