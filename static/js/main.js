@@ -210,7 +210,7 @@ function CalendarCourseBridge(courseManager, calendar) {
 function CourseUtils() {
 	//based on time string, will return an array
 	//containing which days the course will occur
-	this.getCourseDays = function(timeString) {
+	this.parseDays = function(timeString) {
 		//READ: WORKAROUND
 		//Because the week calendar library does not support recurring
 		//events, a single week in time has been selected to represent 
@@ -234,9 +234,11 @@ function CourseUtils() {
 		return courseDates;
 	};
 	
-	//takes course time info and converts into JS Date hour and minute
-	//9:30-10:50p
-	this.createCourseStamp = function(timeString) {
+	//Takes a string of form like ThTh H:MM-H:MM[p] and returns object with the
+	//start and end hours and minutes. NOTE that this algorithm that parses the 
+	//times is based on my observations of the strings in WebSoc and on the assumption 
+	//that all courses will fall during "school hours".
+	this.parseTimes = function(timeString) {
 		var inPM = timeString.charAt(timeString.length - 1);
 		timeString = timeString.replace(/[a-zA-Z&;]/g,'');
 
@@ -252,19 +254,17 @@ function CourseUtils() {
 			var endHour = parseInt(splitEnd[0]);
 			var endMin = parseInt(splitEnd[1]);
 
-		//if end time goes into afternoon, do magic to convert
+		//If end time goes into afternoon, do magic to convert
 		//into 24 hour times
 		if(inPM == 'p') {
 			if(endHour < 12) {
 				endHour += 12;
-
-				if(startHour >= 1 && startHour < 12) {
-					startHour += 12;
-				}
+			} 
+			
+			if(startHour < 8) {
+				startHour += 12;
 			}
 		} 
-
-		//alert('start: ' + startHour + ':' + startMin + ' end: ' + endHour + ':' + endMin);
 
 		var time = {
 			"startHour": startHour,
@@ -376,7 +376,7 @@ function SOC() {
 				return false;
 			}
 			
-			var courseTime = courseUtils.createCourseStamp(timeString);
+			var courseTime = courseUtils.parseTimes(timeString);
 			
 			//scroll calendar viewport to expect newly added course events
 			bridge.getCalendar().scrollToHour(courseTime.startHour);
@@ -384,7 +384,7 @@ function SOC() {
 			//create the array of cal events
 			var calEvents = bridge.getCalendar().createEventArray(
 				courseName,
-				new CourseUtils().getCourseDays(timeString), 
+				new CourseUtils().parseDays(timeString), 
 				courseTime
 			);
 			
@@ -411,6 +411,10 @@ $(document).ready(function() {
 	var bridge = new CalendarCourseBridge(courseManager, apCalendar);
 	var windowManager = new WindowManager();
 	var soc = new SOC();
+	
+	$('h2').click(function() {
+		a = courseManager;
+	});
 	
 	//set appropriate height for #school
 	windowManager.setSOCHeight();
