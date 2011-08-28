@@ -409,15 +409,16 @@ function SOC() {
 		$("tr[valign*='top'] td:nth-child(5)", list).click(function() {
 			var prof = $(this).html();
 			showProfessors(prof);
+			return false; // prevent event bubbling
 		});
 		
 		// instructor hover
 		$("tr[valign*='top'] td:nth-child(5)", list).hover(
 			function() {
-				$(this).css({'color': 'blue', 'cursor': 'pointer'});
+				$(this).css({'text-decoration': 'underline', 'color': '#688FE7'});
 			},
 			function() {
-				$(this).css({'color': 'inherit', 'cursor': 'inherit'});
+				$(this).css({'text-decoration': 'none', 'color': 'black'});
 			}
 		);
 	}
@@ -426,45 +427,39 @@ function SOC() {
 function showProfessors(nameString) {
 	// name is the query string for professors
 	var profTable = $('#prof-select');
-	profTable.html('<tr><td style="border:0">Please wait while we load RateMyProfessors.com</td></tr>');
+	profTable.html('<tr><td style="border:0">Please wait while we grab results from RateMyProfessors.com</td></tr>');
 	profTable.dialog('open');
 	
 	var trs = '<tr><th>Professor</th><th>Department</th><th>#&nbsp;Ratings</th><th>Quality</th><th>Easiness</th><th>Hot</th></tr>';
 	nameList = nameString.split('<br>');
-	for (var n=0; n<nameList.length; n++) {
-		name = nameList[n].toUpperCase();
-		if (name == '' || name == 'STAFF') {
-			trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
-			profTable.html(trs);
-		} else {
-			$.ajax({
-				url: "/prof",
-				type: 'get',
-				data: 'name=' + name,
-				dataType: 'json',
-				beforeSend: function() {
-					$('body').css({'cursor': 'wait'});
-				},
-				success: function(data) {
-					if (data.length > 0) {
-						for (var i=0; i<data.length; i++) {
-							var p = data[i];
-							trs += '<tr><td><a href="'+p.href+'" target="_blank">'+p.name+'</a></td><td>'+p.dept+'</td><td>'+p.ratings+'</td><td>'+p.quality+'</td><td>'+p.easiness+'</td><td>'+p.hot+'</td></tr>';
-						}
-					} else {
-						trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
-					}
-					profTable.html(trs);
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					profTable.html('<tr><td>An error occured:</td></tr><tr><td>'+textStatus+'</td><td>'+errorThrown+'</td></tr>');
-				},
-				complete: function(jqXHR, textStatus) {
-					$('body').css({'cursor': 'auto'});
+	
+	$.ajax({
+		url: "/prof",
+		type: 'get',
+		data: {'names': nameList},
+		dataType: 'json',
+		traditional: true,
+		beforeSend: function() {
+			$('body').css({'cursor': 'wait'});
+		},
+		success: function(data) {
+			if (data.length > 0) {
+				for (var i=0; i<data.length; i++) {
+					var p = data[i];
+					trs += '<tr><td><a href="'+p.href+'" target="_blank">'+p.name+'</a></td><td>'+p.dept+'</td><td>'+p.ratings+'</td><td>'+p.quality+'</td><td>'+p.easiness+'</td><td>'+p.hot+'</td></tr>';
 				}
-			});
+			} else {
+				trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
+			}
+			profTable.html(trs);
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			profTable.html('<tr><td>An error occured:</td></tr><tr><td>'+textStatus+'</td><td>'+errorThrown+'</td></tr>');
+		},
+		complete: function(jqXHR, textStatus) {
+			$('body').css({'cursor': 'auto'});
 		}
-	}
+	});
 }
 
 $(document).ready(function() {
@@ -608,16 +603,17 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$('#prof-select').dialog({	autoOpen: false,
-								modal: true,
-								title: 'RateMyProfessors.com',
-								width: 600,
-								resizable: false,
-								closeOnEscape: true,
-								draggable: false
-							});
+	$('#prof-select').dialog({	
+		autoOpen: false,
+		modal: true,
+		title: 'RateMyProfessors.com',
+		width: 600,
+		resizable: false,
+		closeOnEscape: true,
+		draggable: false
+	});
 	
 });
 
 //surprise!
-if (top === self){}else{$(document).ready(function(){$('html').html('<center><img src="http://i.imgur.com/ANz8N.png"></center>')});}
+if (top === self){}else{$(document).ready(function(){$('html').html('404 not found')});}

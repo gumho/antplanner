@@ -1,6 +1,5 @@
 import web
 import urllib
-import hashlib
 
 import scraper
 import schedule
@@ -9,6 +8,7 @@ from admin import *
 from google.appengine.api import urlfetch 
 from google.appengine.api import memcache
 from google.appengine.api import users
+from django.utils import simplejson as json
 
 import logging
 
@@ -39,7 +39,7 @@ class search:
 			try:
 				raw_page = urlfetch.fetch("http://websoc.reg.uci.edu")
 				search_page = scraper.strip_search(raw_page.content)
-				memcache.add("SEARCH", search_page, 60 * 60)
+				memcache.set("SEARCH", search_page, 60 * 60)
 			except urlfetch.Error:
 				search_page = "UCI webpage is not available at the moment"
 		
@@ -77,13 +77,7 @@ class schedules:
 			pass
 		form_data = urllib.urlencode(form_fields)
 		
-		form_concat = ''
-		for k, v in form_fields.items():
-			form_concat += v
-		
-		#md5 hash of all the form fields used for memcached key
-		form_hash = hashlib.md5(form_concat).hexdigest()
-		
+		form_hash = ''.join(form_fields.values())
 		schedule_page = memcache.get(form_hash)
 		
 		if schedule_page is None:
@@ -93,7 +87,7 @@ class schedules:
 												method=urlfetch.POST,
 												headers={'Content-Type': 'application/x-www-form-urlencoded'})
 				schedule_page = scraper.strip_schedule(raw_page.content)
-				memcache.add(form_hash, schedule_page, 60 * 60)
+				memcache.set(form_hash, schedule_page, 60 * 60)
 			except urlfetch.Error:
 				schedule_page = "UCI webpage is not available at the moment"
 		
@@ -112,26 +106,26 @@ class loadSchedule():
 		
 class getProf():
 	def GET(self):
-		p = web.input()
-		#logging.debug(p)
-		#data = memcache.get("PROF")
-		if p is None or p.name is None:
+		p = web.input(names=[])
+
+		if p is None or p.names is None:
 			return get_rmp_error('Empty Request','The professor must have a last name in order to find ratings.')
-		#if data is None:
-		try:
-			q = urllib.quote_plus(p.name[0])
-			#logging.debug('Query param: ' + q)
-			raw_page = urlfetch.fetch("http://www.ratemyprofessors.com/SelectTeacher.jsp?the_dept=All&sid=1074&orderby=TLName&letter=" + q,
-										method=urlfetch.GET,
-										deadline=10)
-			data = scraper.strip_professors(raw_page.content, unicode(p.name))
-			#memcache.add("PROF", data, 60 * 60)
-		except urlfetch.DownloadError:
-			data = get_rmp_error('urlfetch.DownloadError','RateMyProfessors.com request exceeded 10 seconds')
-		except urlfetch.Error:
-			data = get_rmp_error('urlfetch.Error','RateMyProfessors.com is not available at the moment')
 		
-		return data
+		found = []
+		for n in p.names:
+			try:
+				raw_page = urlfetch.fetch("http://www.ratemyprofessors.com/SelectTeacher.jsp?the_dept=All&sid=1074&orderby=TLName&letter=" + n.split(',')[0],
+					method=urlfetch.GET,
+					deadline=10)
+			except urlfetch.DownloadError:
+				data = get_rmp_error('urlfetch.DownloadError','RateMyProfessors.com request exceeded 10 seconds')
+			except urlfetch.Error:
+				data = get_rmp_error('urlfetch.Error','RateMyProfessors.com is not available at the moment')
+
+			found.extend(scraper.strip_professors(raw_page.content, unicode(n)))
+		
+		logging.info(len(found))
+		return json.dumps(found)
 		
 if __name__ == "__main__":
     app = web.application(urls, globals())

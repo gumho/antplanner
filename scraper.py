@@ -1,6 +1,5 @@
 from lib.BeautifulSoup import BeautifulSoup
 import re
-from django.utils import simplejson as json
 import logging
 
 def strip_search(html):
@@ -31,65 +30,59 @@ def strip_websoc_version(html):
 	else:
 		return version_matches[0]
 	
-def get_rmp_error(title, message):
-	data = {
-		'name': title,
-		'href': 'javascript:void(0);',
-		'dept': message,
-		'ratings': '0',
-		'quality': '0',
-		'easiness': '0',
-		'hot': '&#xd8;'
-	}
-	return json.dumps(data)
-	
 def strip_professors(html, name):
+	"""Returns list of professor matches"""
+	profs = []
+	
 	table = BeautifulSoup(html).find('div', {'id': 'ratingTable'})
 	if table is None:
 		logging.debug(html[500:])
-		return get_rmp_error('Parse Error','Could not find "ratingTable" at RateMyProfessors.com')
-	else:
-		profs = list()
-		#name = name.upper()
-		split = name.split(',');
-		qLastName = split[0].strip()
-		qFirstName = split[1].strip()
-		if (qFirstName == None or qFirstName == ''):
-			qFirstName = '!'
-		rows = table.findAll('div', {'class': re.compile(r".*\bentry\b.*")})
-		for row in rows:
-			divName = row.find('div', {'class': 'profName'})
-			anchor = divName.find('a')
-			profName = unicode(anchor.renderContents().strip(), 'utf-8', 'ignore').upper()
-			split = profName.split(',');
-			lastName = split[0].strip()
-			firstName = split[1].strip()
-			if (firstName == None or firstName == ''):
-				firstName = '!'
-			#logging.debug(qLastName + ' =? ' + lastName + ' && ' + qFirstName + ' =? ' + firstName)
-			if lastName == qLastName and firstName[0] == qFirstName[0]:
-				href = 'http://www.ratemyprofessors.com/' + anchor['href'].strip()
-				profDept = row.find('div', {'class': 'profDept'}).renderContents().strip()
-				profRatings = row.find('div', {'class': 'profRatings'}).renderContents().strip()
-				profQuality = row.find('div', {'class': 'profAvg'}).renderContents().strip()
-				profEasiness = row.find('div', {'class': 'profEasy'}).renderContents().strip()
-				profHot = row.find('div', {'class': re.compile(r".*\bprofHot\b.*")}).renderContents().strip()
-				if profHot == 'Hot':
-					profHot = '&#x2713;'
-				else:
-					profHot = '&nbsp;'
-				
-				prof = {
-					'name': profName,
-					'href': href,
-					'dept': profDept,
-					'ratings': profRatings,
-					'quality': profQuality,
-					'easiness': profEasiness,
-					'hot': profHot
-				}
-				#logging.debug(prof)
-				profs.append(prof)
-		return json.dumps(profs)
+		return profs
+
+	split = name[:-1].upper().split(',')
+	qLast = split[0]
+ 	try:
+		qFirst = split[1]
+	except:
+		qFirst = ''
+			
+	rows = table.findAll('div', {'class': re.compile(r"entry (odd|even)")})
+
+	for row in rows:
+		divName = row.find('div', {'class': 'profName'})
+		anchor = divName.find('a')
+		profName = unicode(anchor.renderContents().strip(), 'utf-8', 'ignore').upper()
 		
+		try:
+			firstName = profName.split(',')[1]
+		except:
+			firstName = ''
+			
+		# logging.info('Searching against: ' + profName)
+		
+		if profName.startswith(qLast) and qFirst in firstName:						
+			href = 'http://www.ratemyprofessors.com/' + anchor['href'].strip()
+			profDept = row.find('div', {'class': 'profDept'}).renderContents().strip()
+			profRatings = row.find('div', {'class': 'profRatings'}).renderContents().strip()
+			profQuality = row.find('div', {'class': 'profAvg'}).renderContents().strip()
+			profEasiness = row.find('div', {'class': 'profEasy'}).renderContents().strip()
+			profHot = row.find('div', {'class': re.compile(r".*\bprofHot\b.*")}).renderContents().strip()
+			
+			if profHot == 'Hot':
+				profHot = '&#x2713;'
+			else:
+				profHot = '&nbsp;'
+
+			profs.append({
+				'name': profName,
+				'href': href,
+				'dept': profDept,
+				'ratings': profRatings,
+				'quality': profQuality,
+				'easiness': profEasiness,
+				'hot': profHot
+			})
+
+	return profs
+
 
