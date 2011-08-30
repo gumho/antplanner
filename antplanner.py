@@ -109,24 +109,25 @@ class getProf():
 		p = web.input(names=[])
 
 		if p is None or p.names is None:
-			return get_rmp_error('Empty Request','The professor must have a last name in order to find ratings.')
+			return '{"success": "Invalid or empty names parameter"}'
 		
 		found = []
-		for n in p.names:
+		for n in p.names:				
 			try:
 				raw_page = urlfetch.fetch("http://www.ratemyprofessors.com/SelectTeacher.jsp?the_dept=All&sid=1074&orderby=TLName&letter=" + n.split(',')[0],
 					method=urlfetch.GET,
 					deadline=10)
 			except urlfetch.DownloadError:
-				data = get_rmp_error('urlfetch.DownloadError','RateMyProfessors.com request exceeded 10 seconds')
+				data = '{"success":"urlfetch.DownloadError: RateMyProfessors.com request exceeded 10 seconds"}'
 			except urlfetch.Error:
-				data = get_rmp_error('urlfetch.Error','RateMyProfessors.com is not available at the moment')
+				data = '{"success":"urlfetch.Error: RateMyProfessors.com is not available at the moment}'
 
 			found.extend(scraper.strip_professors(raw_page.content, unicode(n)))
 		
-		logging.info(len(found))
-		return json.dumps(found)
-		
+		data = {'success': 'true', 'professors': found}
+		return json.dumps(data)
+
+
 if __name__ == "__main__":
     app = web.application(urls, globals())
     app.cgirun()

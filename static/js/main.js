@@ -443,14 +443,16 @@ function showProfessors(nameString) {
 			$('body').css({'cursor': 'wait'});
 		},
 		success: function(data) {
-			if (data.length > 0) {
-				for (var i=0; i<data.length; i++) {
-					var p = data[i];
-					trs += '<tr><td><a href="'+p.href+'" target="_blank">'+p.name+'</a></td><td>'+p.dept+'</td><td>'+p.ratings+'</td><td>'+p.quality+'</td><td>'+p.easiness+'</td><td>'+p.hot+'</td></tr>';
-				}
-			} else {
-				trs += '<tr><td>'+name+'</td><td>&nbsp;</td><td>0 found</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
-			}
+			var profs = data.professors
+			if (data.success == 'true') {
+				if(profs.length > 0) {
+					for (var i=0; i<profs.length; i++) {
+						var p = profs[i];
+						trs += '<tr><td><a href="'+p.href+'" target="_blank">'+p.name+'</a></td><td>'+p.dept+'</td><td>'+p.ratings+'</td><td>'+p.quality+'</td><td>'+p.easiness+'</td><td>'+p.hot+'</td></tr>';
+					}
+				} else {trs += '<tr><td colspan="6">No matching professors were found</td></tr>'; }
+			} else { trs += '<tr><td colspan="6">' + data.success + '</td></tr>';}
+			
 			profTable.html(trs);
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
@@ -606,7 +608,7 @@ $(document).ready(function() {
 	$('#prof-select').dialog({	
 		autoOpen: false,
 		modal: true,
-		title: 'RateMyProfessors.com',
+		title: 'Professer Ratings (via RateMyProfessors.com)',
 		width: 600,
 		resizable: false,
 		closeOnEscape: true,
