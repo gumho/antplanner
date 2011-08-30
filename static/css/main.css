@@ -104,7 +104,7 @@ html, body#index {
 	cursor: pointer;
 }
 
-/* school iframe*/
+/* school iframe (NOTE: use school.css for all changes)*/
 iframe#school {
 	overflow: auto;
 	border: none;
@@ -117,6 +117,7 @@ iframe#school {
 	font-size: 14px;
 	border-collapse: collapse;
 	margin:10px;
+	width: 100%;
 }
 #prof-select td, #prof-select th {
 	border: 1px solid gray;
