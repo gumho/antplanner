@@ -39,7 +39,7 @@ class search:
 			try:
 				raw_page = urlfetch.fetch("http://websoc.reg.uci.edu")
 				search_page = scraper.strip_search(raw_page.content)
-				memcache.set("SEARCH", search_page, 60 * 60)
+				memcache.set("SEARCH", search_page, 12 * 60)
 			except urlfetch.Error:
 				search_page = "UCI webpage is not available at the moment"
 		
@@ -87,7 +87,7 @@ class schedules:
 												method=urlfetch.POST,
 												headers={'Content-Type': 'application/x-www-form-urlencoded'})
 				schedule_page = scraper.strip_schedule(raw_page.content)
-				memcache.set(form_hash, schedule_page, 60 * 60)
+				memcache.set(form_hash, schedule_page, 12 * 60)
 			except urlfetch.Error:
 				schedule_page = "UCI webpage is not available at the moment"
 		
@@ -107,22 +107,28 @@ class loadSchedule():
 class getProf():
 	def GET(self):
 		p = web.input(names=[])
-
 		if p is None or p.names is None:
 			return '{"success": "Invalid or empty names parameter"}'
 		
 		found = []
-		for n in p.names:				
-			try:
-				raw_page = urlfetch.fetch("http://www.ratemyprofessors.com/SelectTeacher.jsp?the_dept=All&sid=1074&orderby=TLName&letter=" + n.split(',')[0],
-					method=urlfetch.GET,
-					deadline=10)
-			except urlfetch.DownloadError:
-				data = '{"success":"urlfetch.DownloadError: RateMyProfessors.com request exceeded 10 seconds"}'
-			except urlfetch.Error:
-				data = '{"success":"urlfetch.Error: RateMyProfessors.com is not available at the moment}'
-
-			found.extend(scraper.strip_professors(raw_page.content, unicode(n)))
+		for n in p.names:
+			prof = memcache.get(n)
+			if prof is None:	
+				try:
+					raw_page = urlfetch.fetch("http://www.ratemyprofessors.com/SelectTeacher.jsp?the_dept=All&sid=1074&orderby=TLName&letter=" + n.split(',')[0],
+						method=urlfetch.GET,
+						deadline=10)
+					
+					prof = scraper.strip_professors(raw_page.content, unicode(n))
+				except urlfetch.DownloadError:
+					data = '{"success":"urlfetch.DownloadError: RateMyProfessors.com request exceeded 10 seconds"}'
+					return json.dumps(data)
+				except urlfetch.Error:
+					data = '{"success":"urlfetch.Error: RateMyProfessors.com is not available at the moment}'
+					return json.dumps(data)
+					
+			found.extend(prof)
+			memcache.set(n, prof, 24 * 60)
 		
 		data = {'success': 'true', 'professors': found}
 		return json.dumps(data)
