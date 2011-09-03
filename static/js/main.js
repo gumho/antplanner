@@ -438,7 +438,6 @@ function showProfessors(nameString) {
 		type: 'get',
 		data: {'names': nameList},
 		dataType: 'json',
-		traditional: true,
 		beforeSend: function() {
 			$('body').css({'cursor': 'wait'});
 		},
