@@ -8,6 +8,7 @@ from admin import *
 from google.appengine.api import urlfetch 
 from google.appengine.api import memcache
 from google.appengine.api import users
+from google.appengine.runtime import DeadlineExceededError
 from django.utils import simplejson as json
 
 import logging
@@ -22,7 +23,7 @@ urls = (
 	'/admin/flush-cache', 'adminFlushCache',
 	'/admin/latest-web-soc', 'latestWebSoc',
 	'/admin/delete-old-schedules', 'deleteOldSchedules',
-	'/prof', 'getProf'
+	#'/prof', 'getProf'
 )
 
 render = web.template.render('templates/')
@@ -121,10 +122,13 @@ class getProf():
 					
 					prof = scraper.strip_professors(raw_page.content, unicode(n))
 				except urlfetch.DownloadError:
-					data = '{"success":"urlfetch.DownloadError: RateMyProfessors.com request exceeded 10 seconds"}'
+					data = '{"success":"urlfetch.DownloadError: RateMyProfessors.com request exceeded maximum of 10 seconds"}'
 					return json.dumps(data)
 				except urlfetch.Error:
 					data = '{"success":"urlfetch.Error: RateMyProfessors.com is not available at the moment}'
+					return json.dumps(data)
+				except DeadlineExceedError:
+					data = '{"success":"DeadlineExceedError: Request to RateMyProfessors.com timed out."}'
 					return json.dumps(data)
 					
 			found.extend(prof)

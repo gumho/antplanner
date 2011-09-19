@@ -141,10 +141,6 @@ def storify(mapping, *requireds, **defaults):
     stor = Storage()
     for key in requireds + tuple(mapping.keys()):
         value = mapping[key]
-        # Hack to support bracketed keys.
-        if key.endswith('[]'):
-            key = key[:-2]
-            
         if isinstance(value, list):            
             if isinstance(defaults.get(key), list):
                 value = [getvalue(x) for x in value]

@@ -405,22 +405,22 @@ function SOC() {
 			}
 		});
 		
-		// click on instructor
-		$("tr[valign*='top'] td:nth-child(5)", list).click(function() {
-			var prof = $(this).html();
-			showProfessors(prof);
-			return false; // prevent event bubbling
-		});
-		
-		// instructor hover
-		$("tr[valign*='top'] td:nth-child(5)", list).hover(
-			function() {
-				$(this).css({'text-decoration': 'underline', 'color': '#688FE7'});
-			},
-			function() {
-				$(this).css({'text-decoration': 'none', 'color': 'black'});
-			}
-		);
+		// // click on instructor
+		// $("tr[valign*='top'] td:nth-child(5)", list).click(function() {
+		// 	var prof = $(this).html();
+		// 	showProfessors(prof);
+		// 	return false; // prevent event bubbling
+		// });
+		// 
+		// // instructor hover
+		// $("tr[valign*='top'] td:nth-child(5)", list).hover(
+		// 	function() {
+		// 		$(this).css({'text-decoration': 'underline', 'color': '#688FE7'});
+		// 	},
+		// 	function() {
+		// 		$(this).css({'text-decoration': 'none', 'color': 'black'});
+		// 	}
+		// );
 	}
 }
 
@@ -431,13 +431,14 @@ function showProfessors(nameString) {
 	profTable.dialog('open');
 	
 	var trs = '<tr><th>Professor</th><th>Department</th><th>#&nbsp;Ratings</th><th>Quality</th><th>Easiness</th><th>Hot</th></tr>';
-	nameList = nameString.split('<br>');
-	
+	var nameList = nameString.split('<br>'); //lowcase for IE support
+
 	$.ajax({
 		url: "/prof",
 		type: 'get',
 		data: {'names': nameList},
 		dataType: 'json',
+		traditional: true,
 		beforeSend: function() {
 			$('body').css({'cursor': 'wait'});
 		},
