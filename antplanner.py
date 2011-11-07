@@ -40,7 +40,7 @@ class search:
 			try:
 				raw_page = urlfetch.fetch("http://websoc.reg.uci.edu")
 				search_page = scraper.strip_search(raw_page.content)
-				memcache.set("SEARCH", search_page, 12 * 60)
+				memcache.set("SEARCH", search_page, 24 * 60 * 60) #24 hours
 			except urlfetch.Error:
 				search_page = "UCI webpage is not available at the moment"
 		
@@ -88,7 +88,7 @@ class schedules:
 												method=urlfetch.POST,
 												headers={'Content-Type': 'application/x-www-form-urlencoded'})
 				schedule_page = scraper.strip_schedule(raw_page.content)
-				memcache.set(form_hash, schedule_page, 12 * 60)
+				memcache.set(form_hash, schedule_page, 6 * 60 * 60) #6 hours
 			except urlfetch.Error:
 				schedule_page = "UCI webpage is not available at the moment"
 		
