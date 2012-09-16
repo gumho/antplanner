@@ -3,7 +3,7 @@ import re
 import logging
 
 def strip_search(html):
-	form_html = BeautifulSoup(html).find('form', action='http://websoc.reg.uci.edu/')
+	form_html = BeautifulSoup(html).find('form', action='http://websoc.reg.uci.edu/perl/WebSoc')
 	
 	#replace form submit with our own link
 	form_html['action'] = '/schedules'
